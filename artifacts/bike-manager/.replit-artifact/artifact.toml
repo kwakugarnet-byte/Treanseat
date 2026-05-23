@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Bike Manager"
+version = "1.0.0"
+id = "artifacts/bike-manager"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 26048
+
+[services.development]
+run = "pnpm --filter @workspace/bike-manager run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/bike-manager", "run", "build" ]
+publicDir = "artifacts/bike-manager/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "26048"
+BASE_PATH = "/"

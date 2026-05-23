@@ -1,22 +1,34 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Bike Management System API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: auth
+    description: Authentication
+  - name: bikes
+    description: Bike management
+  - name: sales
+    description: Sales recording
+  - name: maintenance
+    description: Maintenance expenses
+  - name: users
+    description: User management
+  - name: snooker
+    description: Snooker board management
+  - name: dashboard
+    description: Dashboard summaries
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +36,594 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Login with PIN
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginInput"
+      responses:
+        "200":
+          description: Logged in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResult"
+        "401":
+          description: Invalid PIN
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/logout:
+    post:
+      operationId: logout
+      tags: [auth]
+      summary: Logout
+      responses:
+        "200":
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /auth/me:
+    get:
+      operationId: getMe
+      tags: [auth]
+      summary: Get current user
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /users:
+    get:
+      operationId: listUsers
+      tags: [users]
+      summary: List all users (admin only)
+      responses:
+        "200":
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+    post:
+      operationId: createUser
+      tags: [users]
+      summary: Create a user (admin only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+  /users/{id}:
+    get:
+      operationId: getUser
+      tags: [users]
+      summary: Get a user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: User
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+    patch:
+      operationId: updateUser
+      tags: [users]
+      summary: Update a user (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+    delete:
+      operationId: deleteUser
+      tags: [users]
+      summary: Delete a user (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /bikes:
+    get:
+      operationId: listBikes
+      tags: [bikes]
+      summary: List all bikes
+      responses:
+        "200":
+          description: List of bikes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Bike"
+    post:
+      operationId: createBike
+      tags: [bikes]
+      summary: Create a bike (admin only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BikeInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Bike"
+
+  /bikes/{id}:
+    get:
+      operationId: getBike
+      tags: [bikes]
+      summary: Get a bike
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Bike
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Bike"
+    patch:
+      operationId: updateBike
+      tags: [bikes]
+      summary: Update a bike (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BikeUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Bike"
+    delete:
+      operationId: deleteBike
+      tags: [bikes]
+      summary: Delete a bike (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /sales:
+    get:
+      operationId: listSales
+      tags: [sales]
+      summary: List sales records
+      parameters:
+        - name: bikeId
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: weekStart
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of sales
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Sale"
+    post:
+      operationId: createSale
+      tags: [sales]
+      summary: Record a sale
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SaleInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Sale"
+
+  /sales/{id}:
+    patch:
+      operationId: updateSale
+      tags: [sales]
+      summary: Update a sale record
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SaleUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Sale"
+    delete:
+      operationId: deleteSale
+      tags: [sales]
+      summary: Delete a sale record
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /maintenance:
+    get:
+      operationId: listMaintenance
+      tags: [maintenance]
+      summary: List maintenance records
+      parameters:
+        - name: bikeId
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of maintenance records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MaintenanceRecord"
+    post:
+      operationId: createMaintenance
+      tags: [maintenance]
+      summary: Log a maintenance expense
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MaintenanceInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MaintenanceRecord"
+
+  /maintenance/{id}:
+    patch:
+      operationId: updateMaintenance
+      tags: [maintenance]
+      summary: Update a maintenance record
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MaintenanceUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MaintenanceRecord"
+    delete:
+      operationId: deleteMaintenance
+      tags: [maintenance]
+      summary: Delete a maintenance record
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: Get dashboard summary (fleet overview)
+      responses:
+        "200":
+          description: Summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+
+  /dashboard/profit:
+    get:
+      operationId: getProfitSummary
+      tags: [dashboard]
+      summary: Get profit summary (admin only)
+      parameters:
+        - name: weeks
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Profit breakdown
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProfitSummary"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /snooker/boards:
+    get:
+      operationId: listSnookerBoards
+      tags: [snooker]
+      summary: List all snooker boards
+      responses:
+        "200":
+          description: List of boards
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SnookerBoard"
+    post:
+      operationId: createSnookerBoard
+      tags: [snooker]
+      summary: Create a snooker board (admin only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SnookerBoardInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SnookerBoard"
+
+  /snooker/sessions:
+    get:
+      operationId: listSnookerSessions
+      tags: [snooker]
+      summary: List snooker sessions
+      parameters:
+        - name: boardId
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: date
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of sessions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SnookerSession"
+    post:
+      operationId: createSnookerSession
+      tags: [snooker]
+      summary: Record a snooker session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SnookerSessionInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SnookerSession"
+
+  /snooker/sessions/{id}:
+    patch:
+      operationId: updateSnookerSession
+      tags: [snooker]
+      summary: Update a snooker session
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SnookerSessionUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SnookerSession"
+    delete:
+      operationId: deleteSnookerSession
+      tags: [snooker]
+      summary: Delete a snooker session
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /snooker/summary:
+    get:
+      operationId: getSnookerSummary
+      tags: [snooker]
+      summary: Get snooker summary (admin only)
+      responses:
+        "200":
+          description: Summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SnookerSummary"
+
+  /dashboard/bike-performance:
+    get:
+      operationId: getBikePerformance
+      tags: [dashboard]
+      summary: Get per-bike sales performance
+      responses:
+        "200":
+          description: Bike performance
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BikePerformance"
+
 components:
   schemas:
     HealthStatus:
@@ -31,6 +631,377 @@ components:
       properties:
         status:
           type: string
-      required:
-        - status
+      required: [status]
 
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required: [error]
+
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+      required: [success]
+
+    LoginInput:
+      type: object
+      properties:
+        pin:
+          type: string
+      required: [pin]
+
+    AuthResult:
+      type: object
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+        token:
+          type: string
+      required: [user, token]
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        role:
+          type: string
+          enum: [admin, user]
+        createdAt:
+          type: string
+      required: [id, name, role, createdAt]
+
+    UserInput:
+      type: object
+      properties:
+        name:
+          type: string
+        pin:
+          type: string
+        role:
+          type: string
+          enum: [admin, user]
+      required: [name, pin, role]
+
+    UserUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        pin:
+          type: string
+        role:
+          type: string
+          enum: [admin, user]
+
+    Bike:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        status:
+          type: string
+          enum: [active, inactive, maintenance]
+        createdAt:
+          type: string
+      required: [id, name, status, createdAt]
+
+    BikeInput:
+      type: object
+      properties:
+        name:
+          type: string
+        status:
+          type: string
+          enum: [active, inactive, maintenance]
+      required: [name]
+
+    BikeUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        status:
+          type: string
+          enum: [active, inactive, maintenance]
+
+    Sale:
+      type: object
+      properties:
+        id:
+          type: integer
+        bikeId:
+          type: integer
+        bikeName:
+          type: string
+        weekStart:
+          type: string
+        amount:
+          type: number
+        status:
+          type: string
+          enum: [normal, absent, illness, maintenance]
+        notes:
+          type: ["string", "null"]
+        recordedAt:
+          type: string
+      required: [id, bikeId, bikeName, weekStart, amount, status, recordedAt]
+
+    SaleInput:
+      type: object
+      properties:
+        bikeId:
+          type: integer
+        weekStart:
+          type: string
+        amount:
+          type: number
+        status:
+          type: string
+          enum: [normal, absent, illness, maintenance]
+        notes:
+          type: string
+      required: [bikeId, weekStart, amount, status]
+
+    SaleUpdate:
+      type: object
+      properties:
+        amount:
+          type: number
+        status:
+          type: string
+          enum: [normal, absent, illness, maintenance]
+        notes:
+          type: string
+
+    MaintenanceRecord:
+      type: object
+      properties:
+        id:
+          type: integer
+        bikeId:
+          type: integer
+        bikeName:
+          type: string
+        date:
+          type: string
+        cost:
+          type: number
+        description:
+          type: string
+        createdAt:
+          type: string
+      required: [id, bikeId, bikeName, date, cost, description, createdAt]
+
+    MaintenanceInput:
+      type: object
+      properties:
+        bikeId:
+          type: integer
+        date:
+          type: string
+        cost:
+          type: number
+        description:
+          type: string
+      required: [bikeId, date, cost, description]
+
+    MaintenanceUpdate:
+      type: object
+      properties:
+        cost:
+          type: number
+        description:
+          type: string
+        date:
+          type: string
+
+    DashboardSummary:
+      type: object
+      properties:
+        totalBikes:
+          type: integer
+        activeBikes:
+          type: integer
+        maintenanceBikes:
+          type: integer
+        totalSalesThisWeek:
+          type: number
+        totalSalesThisMonth:
+          type: number
+        recentSales:
+          type: array
+          items:
+            $ref: "#/components/schemas/Sale"
+      required: [totalBikes, activeBikes, maintenanceBikes, totalSalesThisWeek, totalSalesThisMonth, recentSales]
+
+    ProfitSummary:
+      type: object
+      properties:
+        totalSales:
+          type: number
+        totalMaintenance:
+          type: number
+        profit:
+          type: number
+        weeklyBreakdown:
+          type: array
+          items:
+            $ref: "#/components/schemas/WeeklyProfit"
+      required: [totalSales, totalMaintenance, profit, weeklyBreakdown]
+
+    WeeklyProfit:
+      type: object
+      properties:
+        weekStart:
+          type: string
+        sales:
+          type: number
+        maintenance:
+          type: number
+        profit:
+          type: number
+      required: [weekStart, sales, maintenance, profit]
+
+    BikePerformance:
+      type: object
+      properties:
+        bikeId:
+          type: integer
+        bikeName:
+          type: string
+        totalSales:
+          type: number
+        totalMaintenance:
+          type: number
+        weeksRecorded:
+          type: integer
+        averageWeeklySales:
+          type: number
+      required: [bikeId, bikeName, totalSales, totalMaintenance, weeksRecorded, averageWeeklySales]
+
+    SnookerBoard:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        coinValue:
+          type: number
+        isActive:
+          type: integer
+        createdAt:
+          type: string
+      required: [id, name, coinValue, isActive, createdAt]
+
+    SnookerBoardInput:
+      type: object
+      properties:
+        name:
+          type: string
+        coinValue:
+          type: number
+      required: [name]
+
+    SnookerSession:
+      type: object
+      properties:
+        id:
+          type: integer
+        boardId:
+          type: integer
+        boardName:
+          type: string
+        date:
+          type: string
+        coinsCount:
+          type: integer
+        coinTotal:
+          type: number
+        cashierAmount:
+          type: ["number", "null"]
+        variance:
+          type: ["number", "null"]
+        notes:
+          type: ["string", "null"]
+        recordedBy:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+      required: [id, boardId, boardName, date, coinsCount, coinTotal, createdAt]
+
+    SnookerSessionInput:
+      type: object
+      properties:
+        boardId:
+          type: integer
+        date:
+          type: string
+        coinsCount:
+          type: integer
+        cashierAmount:
+          type: number
+        notes:
+          type: string
+        recordedBy:
+          type: string
+      required: [boardId, date, coinsCount, cashierAmount]
+
+    SnookerSessionUpdate:
+      type: object
+      properties:
+        coinsCount:
+          type: integer
+        cashierAmount:
+          type: number
+        notes:
+          type: string
+        recordedBy:
+          type: string
+
+    SnookerSummary:
+      type: object
+      properties:
+        totalSessions:
+          type: integer
+        totalCoinRevenue:
+          type: number
+        totalCashierRevenue:
+          type: number
+        totalVariance:
+          type: number
+        boardBreakdown:
+          type: array
+          items:
+            $ref: "#/components/schemas/SnookerBoardSummary"
+        recentSessions:
+          type: array
+          items:
+            $ref: "#/components/schemas/SnookerSession"
+      required: [totalSessions, totalCoinRevenue, totalCashierRevenue, totalVariance, boardBreakdown, recentSessions]
+
+    SnookerBoardSummary:
+      type: object
+      properties:
+        boardId:
+          type: integer
+        boardName:
+          type: string
+        totalSessions:
+          type: integer
+        totalCoinRevenue:
+          type: number
+        totalCashierRevenue:
+          type: number
+        totalVariance:
+          type: number
+      required: [boardId, boardName, totalSessions, totalCoinRevenue, totalCashierRevenue, totalVariance]
