@@ -25,6 +25,9 @@ router.post("/users", requireAdmin, async (req, res) => {
     if (!name || !pin || !role) {
       return res.status(400).json({ error: "name, pin, and role are required" });
     }
+    if (!["admin", "manager"].includes(role)) {
+      return res.status(400).json({ error: "role must be admin or manager" });
+    }
     const hashed = hashPin(String(pin));
     const [user] = await db.insert(usersTable).values({ name, pin: hashed, role }).returning();
     return res.status(201).json({
@@ -61,7 +64,12 @@ router.patch("/users/:id", requireAdmin, async (req, res) => {
     const updates: any = {};
     if (name) updates.name = name;
     if (pin) updates.pin = hashPin(String(pin));
-    if (role) updates.role = role;
+    if (role) {
+      if (!["admin", "manager"].includes(role)) {
+        return res.status(400).json({ error: "role must be admin or manager" });
+      }
+      updates.role = role;
+    }
     const [user] = await db.update(usersTable).set(updates).where(eq(usersTable.id, id)).returning();
     if (!user) return res.status(404).json({ error: "User not found" });
     return res.json({

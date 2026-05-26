@@ -6,7 +6,7 @@ export const usersTable = pgTable("users", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
   pin: text("pin").notNull(),
-  role: text("role").notNull().default("user"),
+  role: text("role").notNull().default("manager"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

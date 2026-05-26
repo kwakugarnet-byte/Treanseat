@@ -27,7 +27,7 @@ export const LoginResponse = zod.object({
   "user": zod.object({
   "id": zod.number(),
   "name": zod.string(),
-  "role": zod.enum(['admin', 'user']),
+  "role": zod.enum(['admin', 'manager']),
   "createdAt": zod.string()
 }),
   "token": zod.string()
@@ -48,7 +48,7 @@ export const LogoutResponse = zod.object({
 export const GetMeResponse = zod.object({
   "id": zod.number(),
   "name": zod.string(),
-  "role": zod.enum(['admin', 'user']),
+  "role": zod.enum(['admin', 'manager']),
   "createdAt": zod.string()
 })
 
@@ -59,7 +59,7 @@ export const GetMeResponse = zod.object({
 export const ListUsersResponseItem = zod.object({
   "id": zod.number(),
   "name": zod.string(),
-  "role": zod.enum(['admin', 'user']),
+  "role": zod.enum(['admin', 'manager']),
   "createdAt": zod.string()
 })
 export const ListUsersResponse = zod.array(ListUsersResponseItem)
@@ -71,7 +71,7 @@ export const ListUsersResponse = zod.array(ListUsersResponseItem)
 export const CreateUserBody = zod.object({
   "name": zod.string(),
   "pin": zod.string(),
-  "role": zod.enum(['admin', 'user'])
+  "role": zod.enum(['admin', 'manager'])
 })
 
 
@@ -85,7 +85,7 @@ export const GetUserParams = zod.object({
 export const GetUserResponse = zod.object({
   "id": zod.number(),
   "name": zod.string(),
-  "role": zod.enum(['admin', 'user']),
+  "role": zod.enum(['admin', 'manager']),
   "createdAt": zod.string()
 })
 
@@ -100,13 +100,13 @@ export const UpdateUserParams = zod.object({
 export const UpdateUserBody = zod.object({
   "name": zod.string().optional(),
   "pin": zod.string().optional(),
-  "role": zod.enum(['admin', 'user']).optional()
+  "role": zod.enum(['admin', 'manager']).optional()
 })
 
 export const UpdateUserResponse = zod.object({
   "id": zod.number(),
   "name": zod.string(),
-  "role": zod.enum(['admin', 'user']),
+  "role": zod.enum(['admin', 'manager']),
   "createdAt": zod.string()
 })
 

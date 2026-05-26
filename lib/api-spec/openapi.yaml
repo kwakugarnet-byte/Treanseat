@@ -672,7 +672,7 @@ components:
           type: string
         role:
           type: string
-          enum: [admin, user]
+          enum: [admin, manager]
         createdAt:
           type: string
       required: [id, name, role, createdAt]
@@ -686,7 +686,7 @@ components:
           type: string
         role:
           type: string
-          enum: [admin, user]
+          enum: [admin, manager]
       required: [name, pin, role]
 
     UserUpdate:
@@ -698,7 +698,7 @@ components:
           type: string
         role:
           type: string
-          enum: [admin, user]
+          enum: [admin, manager]
 
     Bike:
       type: object

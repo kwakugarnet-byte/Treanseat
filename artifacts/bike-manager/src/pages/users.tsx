@@ -77,8 +77,8 @@ export function Users() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Users</h1>
-          <p className="text-muted-foreground">Manage staff access and roles.</p>
+          <h1 className="text-3xl font-bold tracking-tight">Staff Accounts</h1>
+          <p className="text-muted-foreground">Manage admin and manager logins.</p>
         </div>
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
           <DialogTrigger asChild>
@@ -99,10 +99,10 @@ export function Users() {
               </div>
               <div className="space-y-2">
                 <Label>Role</Label>
-                <Select name="role" defaultValue="user">
+                <Select name="role" defaultValue="manager">
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="user">User</SelectItem>
+                    <SelectItem value="manager">Manager</SelectItem>
                     <SelectItem value="admin">Admin</SelectItem>
                   </SelectContent>
                 </Select>
@@ -138,7 +138,7 @@ export function Users() {
                   <TableCell className="font-medium">{user.name}</TableCell>
                   <TableCell>
                     <Badge variant={user.role === 'admin' ? 'default' : 'secondary'} className="capitalize">
-                      {user.role}
+                      {user.role === 'admin' ? 'Admin' : 'Manager'}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-muted-foreground">
@@ -189,7 +189,7 @@ export function Users() {
                 <Select name="role" defaultValue={editingUser.role}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="user">User</SelectItem>
+                    <SelectItem value="manager">Manager</SelectItem>
                     <SelectItem value="admin">Admin</SelectItem>
                   </SelectContent>
                 </Select>
