@@ -26,8 +26,8 @@ import { useToast } from "@/hooks/use-toast";
 function VarianceBadge({ variance }: { variance: number | null }) {
   if (variance === null) return <Badge variant="secondary">Pending</Badge>;
   if (variance === 0) return <Badge className="bg-green-600 text-white"><CheckCircle className="h-3 w-3 mr-1" />Balanced</Badge>;
-  if (variance > 0) return <Badge className="bg-red-600 text-white"><AlertTriangle className="h-3 w-3 mr-1" />Loss: GH₵{variance.toFixed(2)}</Badge>;
-  return <Badge className="bg-blue-600 text-white"><Circle className="h-3 w-3 mr-1" />Surplus: GH₵{Math.abs(variance).toFixed(2)}</Badge>;
+  if (variance > 0) return <Badge className="bg-red-600 text-white"><AlertTriangle className="h-3 w-3 mr-1" />Loss: ₵{variance.toFixed(2)}</Badge>;
+  return <Badge className="bg-blue-600 text-white"><Circle className="h-3 w-3 mr-1" />Surplus: ₵{Math.abs(variance).toFixed(2)}</Badge>;
 }
 
 function RecordSessionModal({ onClose }: { onClose: () => void }) {
@@ -106,12 +106,12 @@ function RecordSessionModal({ onClose }: { onClose: () => void }) {
         />
         {coinsCount && (
           <p className="text-sm text-muted-foreground">
-            Coin value: GH₵{coinTotal.toFixed(2)} ({parseInt(coinsCount)} × GH₵5.00)
+            Coin value: ₵{coinTotal.toFixed(2)} ({parseInt(coinsCount)} × ₵5.00)
           </p>
         )}
       </div>
       <div className="space-y-2">
-        <Label>Cashier Amount (GH₵)</Label>
+        <Label>Cashier Amount (₵)</Label>
         <Input
           type="number"
           min="0"
@@ -126,8 +126,8 @@ function RecordSessionModal({ onClose }: { onClose: () => void }) {
       {variance !== null && (
         <div className={`p-3 rounded-md text-sm font-medium ${variance === 0 ? "bg-green-50 text-green-800 border border-green-200" : variance > 0 ? "bg-red-50 text-red-800 border border-red-200" : "bg-blue-50 text-blue-800 border border-blue-200"}`}>
           {variance === 0 && "Coins match cashier — no losses."}
-          {variance > 0 && `Loss detected: GH₵${variance.toFixed(2)} missing from cashier.`}
-          {variance < 0 && `Surplus: cashier has GH₵${Math.abs(variance).toFixed(2)} more than coins.`}
+          {variance > 0 && `Loss detected: ₵${variance.toFixed(2)} missing from cashier.`}
+          {variance < 0 && `Surplus: cashier has ₵${Math.abs(variance).toFixed(2)} more than coins.`}
         </div>
       )}
 
@@ -226,7 +226,7 @@ export function Snooker() {
             <CardTitle className="text-sm font-medium text-muted-foreground">Coin Revenue</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">GH₵{totalCoins.toFixed(2)}</div>
+            <div className="text-2xl font-bold">₵{totalCoins.toFixed(2)}</div>
             <p className="text-xs text-muted-foreground mt-1">From boards</p>
           </CardContent>
         </Card>
@@ -235,7 +235,7 @@ export function Snooker() {
             <CardTitle className="text-sm font-medium text-muted-foreground">Cashier</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">GH₵{totalCashier.toFixed(2)}</div>
+            <div className="text-2xl font-bold">₵{totalCashier.toFixed(2)}</div>
             <p className="text-xs text-muted-foreground mt-1">Cash collected</p>
           </CardContent>
         </Card>
@@ -245,7 +245,7 @@ export function Snooker() {
           </CardHeader>
           <CardContent>
             <div className={`text-2xl font-bold ${totalLoss > 0 ? "text-red-600" : "text-green-600"}`}>
-              GH₵{totalLoss.toFixed(2)}
+              ₵{totalLoss.toFixed(2)}
             </div>
             <p className="text-xs text-muted-foreground mt-1">Missing cash</p>
           </CardContent>
@@ -267,16 +267,16 @@ export function Snooker() {
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Coin revenue</span>
-                  <span className="font-medium">GH₵{board.totalCoinRevenue.toFixed(2)}</span>
+                  <span className="font-medium">₵{board.totalCoinRevenue.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Cashier</span>
-                  <span className="font-medium">GH₵{board.totalCashierRevenue.toFixed(2)}</span>
+                  <span className="font-medium">₵{board.totalCashierRevenue.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm border-t pt-2">
                   <span className="text-muted-foreground">Variance</span>
                   <span className={`font-bold ${board.totalVariance > 0 ? "text-red-600" : board.totalVariance < 0 ? "text-blue-600" : "text-green-600"}`}>
-                    {board.totalVariance > 0 ? `-GH₵${board.totalVariance.toFixed(2)}` : board.totalVariance < 0 ? `+GH₵${Math.abs(board.totalVariance).toFixed(2)}` : "Balanced"}
+                    {board.totalVariance > 0 ? `-₵${board.totalVariance.toFixed(2)}` : board.totalVariance < 0 ? `+₵${Math.abs(board.totalVariance).toFixed(2)}` : "Balanced"}
                   </span>
                 </div>
               </CardContent>
@@ -332,8 +332,8 @@ export function Snooker() {
                     <TableCell className="font-medium">{session.date}</TableCell>
                     <TableCell>{session.boardName}</TableCell>
                     <TableCell>{session.coinsCount}</TableCell>
-                    <TableCell>GH₵{session.coinTotal.toFixed(2)}</TableCell>
-                    <TableCell>{session.cashierAmount != null ? `GH₵${session.cashierAmount.toFixed(2)}` : "—"}</TableCell>
+                    <TableCell>₵{session.coinTotal.toFixed(2)}</TableCell>
+                    <TableCell>{session.cashierAmount != null ? `₵${session.cashierAmount.toFixed(2)}` : "—"}</TableCell>
                     <TableCell><VarianceBadge variance={session.variance ?? null} /></TableCell>
                     <TableCell className="text-muted-foreground text-sm">{session.notes ?? "—"}</TableCell>
                     <TableCell>
