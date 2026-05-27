@@ -155,12 +155,12 @@ export function Snooker() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
-  const [filterBoard, setFilterBoard] = useState("");
+  const [filterBoard, setFilterBoard] = useState("all");
 
   const { data: boards } = useListSnookerBoards({ query: { queryKey: getListSnookerBoardsQueryKey() } });
   const { data: sessions, isLoading } = useListSnookerSessions(
-    filterBoard ? { boardId: parseInt(filterBoard) } : {},
-    { query: { queryKey: getListSnookerSessionsQueryKey(filterBoard ? { boardId: parseInt(filterBoard) } : undefined) } }
+    filterBoard !== "all" ? { boardId: parseInt(filterBoard) } : {},
+    { query: { queryKey: getListSnookerSessionsQueryKey(filterBoard !== "all" ? { boardId: parseInt(filterBoard) } : undefined) } }
   );
   const { data: summary } = useGetSnookerSummary({
     query: {
@@ -293,7 +293,7 @@ export function Snooker() {
               <SelectValue placeholder="All boards" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All boards</SelectItem>
+              <SelectItem value="all">All boards</SelectItem>
               {boards?.map(b => (
                 <SelectItem key={b.id} value={String(b.id)}>{b.name}</SelectItem>
               ))}
