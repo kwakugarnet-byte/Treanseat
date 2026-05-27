@@ -440,6 +440,29 @@ paths:
                 $ref: "#/components/schemas/MaintenanceType"
 
   /maintenance-types/{id}:
+    patch:
+      operationId: updateMaintenanceType
+      tags: [maintenance-types]
+      summary: Update a maintenance type
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MaintenanceTypeUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MaintenanceType"
     delete:
       operationId: deleteMaintenanceType
       tags: [maintenance-types]
@@ -1224,16 +1247,30 @@ components:
           type: integer
         name:
           type: string
+        frequencyDays:
+          type: integer
+          description: How often this maintenance should repeat in days. 0 means no fixed schedule.
         createdAt:
           type: string
-      required: [id, name, createdAt]
+      required: [id, name, frequencyDays, createdAt]
 
     MaintenanceTypeInput:
       type: object
       properties:
         name:
           type: string
+        frequencyDays:
+          type: integer
+          description: How often this maintenance should repeat in days. 0 means no fixed schedule.
       required: [name]
+
+    MaintenanceTypeUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        frequencyDays:
+          type: integer
 
     MaintenanceRecord:
       type: object

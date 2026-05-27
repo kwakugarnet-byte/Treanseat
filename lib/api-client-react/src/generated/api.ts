@@ -40,6 +40,7 @@ import type {
   MaintenanceRecord,
   MaintenanceType,
   MaintenanceTypeInput,
+  MaintenanceTypeUpdate,
   MaintenanceUpdate,
   ProfitSummary,
   Rider,
@@ -1704,6 +1705,78 @@ export const useCreateMaintenanceType = <TError = ErrorType<unknown>,
         TContext
       > => {
       return useMutation(getCreateMaintenanceTypeMutationOptions(options));
+    }
+
+export const getUpdateMaintenanceTypeUrl = (id: number,) => {
+
+
+
+
+  return `/api/maintenance-types/${id}`
+}
+
+/**
+ * @summary Update a maintenance type
+ */
+export const updateMaintenanceType = async (id: number,
+    maintenanceTypeUpdate: MaintenanceTypeUpdate, options?: RequestInit): Promise<MaintenanceType> => {
+
+  return customFetch<MaintenanceType>(getUpdateMaintenanceTypeUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      maintenanceTypeUpdate,)
+  }
+);}
+
+
+
+
+export const getUpdateMaintenanceTypeMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateMaintenanceType>>, TError,{id: number;data: BodyType<MaintenanceTypeUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateMaintenanceType>>, TError,{id: number;data: BodyType<MaintenanceTypeUpdate>}, TContext> => {
+
+const mutationKey = ['updateMaintenanceType'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateMaintenanceType>>, {id: number;data: BodyType<MaintenanceTypeUpdate>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateMaintenanceType(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateMaintenanceTypeMutationResult = NonNullable<Awaited<ReturnType<typeof updateMaintenanceType>>>
+    export type UpdateMaintenanceTypeMutationBody = BodyType<MaintenanceTypeUpdate>
+    export type UpdateMaintenanceTypeMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Update a maintenance type
+ */
+export const useUpdateMaintenanceType = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateMaintenanceType>>, TError,{id: number;data: BodyType<MaintenanceTypeUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateMaintenanceType>>,
+        TError,
+        {id: number;data: BodyType<MaintenanceTypeUpdate>},
+        TContext
+      > => {
+      return useMutation(getUpdateMaintenanceTypeMutationOptions(options));
     }
 
 export const getDeleteMaintenanceTypeUrl = (id: number,) => {

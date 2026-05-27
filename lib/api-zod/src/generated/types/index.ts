@@ -31,6 +31,7 @@ export * from './maintenanceInput';
 export * from './maintenanceRecord';
 export * from './maintenanceType';
 export * from './maintenanceTypeInput';
+export * from './maintenanceTypeUpdate';
 export * from './maintenanceUpdate';
 export * from './profitSummary';
 export * from './rider';

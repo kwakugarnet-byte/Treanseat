@@ -308,6 +308,7 @@ export const CreateMaintenanceBody = zod.object({
 export const ListMaintenanceTypesResponseItem = zod.object({
   "id": zod.number(),
   "name": zod.string(),
+  "frequencyDays": zod.number().describe('How often this maintenance should repeat in days. 0 means no fixed schedule.'),
   "createdAt": zod.string()
 })
 export const ListMaintenanceTypesResponse = zod.array(ListMaintenanceTypesResponseItem)
@@ -317,7 +318,28 @@ export const ListMaintenanceTypesResponse = zod.array(ListMaintenanceTypesRespon
  * @summary Create a new maintenance type
  */
 export const CreateMaintenanceTypeBody = zod.object({
-  "name": zod.string()
+  "name": zod.string(),
+  "frequencyDays": zod.number().optional().describe('How often this maintenance should repeat in days. 0 means no fixed schedule.')
+})
+
+
+/**
+ * @summary Update a maintenance type
+ */
+export const UpdateMaintenanceTypeParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const UpdateMaintenanceTypeBody = zod.object({
+  "name": zod.string().optional(),
+  "frequencyDays": zod.number().optional()
+})
+
+export const UpdateMaintenanceTypeResponse = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "frequencyDays": zod.number().describe('How often this maintenance should repeat in days. 0 means no fixed schedule.'),
+  "createdAt": zod.string()
 })
 
 

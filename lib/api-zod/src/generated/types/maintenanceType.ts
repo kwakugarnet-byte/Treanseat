@@ -9,5 +9,7 @@
 export interface MaintenanceType {
   id: number;
   name: string;
+  /** How often this maintenance should repeat in days. 0 means no fixed schedule. */
+  frequencyDays: number;
   createdAt: string;
 }

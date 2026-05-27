@@ -125,10 +125,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
           <div className="hidden md:block">
             {/* Title could go here based on route */}
           </div>
-          <div className="flex items-center gap-4">
-            <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-sm">
-              {user?.name?.[0]?.toUpperCase()}
+          <div className="flex items-center gap-2">
+            <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold text-xs">
+              {user?.name
+                ?.split(" ")
+                .filter(Boolean)
+                .slice(0, 2)
+                .map(w => w[0].toUpperCase())
+                .join("")}
             </div>
+            <span className="hidden md:block text-sm font-medium">{user?.name}</span>
           </div>
         </header>
 

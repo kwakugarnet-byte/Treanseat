@@ -207,11 +207,20 @@ export interface SaleUpdate {
 export interface MaintenanceType {
   id: number;
   name: string;
+  /** How often this maintenance should repeat in days. 0 means no fixed schedule. */
+  frequencyDays: number;
   createdAt: string;
 }
 
 export interface MaintenanceTypeInput {
   name: string;
+  /** How often this maintenance should repeat in days. 0 means no fixed schedule. */
+  frequencyDays?: number;
+}
+
+export interface MaintenanceTypeUpdate {
+  name?: string;
+  frequencyDays?: number;
 }
 
 export interface MaintenanceRecord {

@@ -6,8 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface MaintenanceTypeInput {
-  name: string;
-  /** How often this maintenance should repeat in days. 0 means no fixed schedule. */
+export interface MaintenanceTypeUpdate {
+  name?: string;
   frequencyDays?: number;
 }
