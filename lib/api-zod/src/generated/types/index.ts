@@ -22,6 +22,7 @@ export * from './listMaintenanceParams';
 export * from './listSalesParams';
 export * from './listSnookerSessionsParams';
 export * from './loginInput';
+export * from './maintenanceByBike';
 export * from './maintenanceInput';
 export * from './maintenanceRecord';
 export * from './maintenanceUpdate';

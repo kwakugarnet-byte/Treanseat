@@ -5,6 +5,7 @@
  * Bike Management System API
  * OpenAPI spec version: 0.1.0
  */
+import type { MaintenanceByBike } from './maintenanceByBike';
 import type { WeeklyProfit } from './weeklyProfit';
 
 export interface ProfitSummary {
@@ -12,4 +13,5 @@ export interface ProfitSummary {
   totalMaintenance: number;
   profit: number;
   weeklyBreakdown: WeeklyProfit[];
+  maintenanceByBike: MaintenanceByBike[];
 }

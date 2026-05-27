@@ -353,7 +353,9 @@ export const GetDashboardSummaryResponse = zod.object({
  * @summary Get profit summary (admin only)
  */
 export const GetProfitSummaryQueryParams = zod.object({
-  "weeks": zod.coerce.number().optional()
+  "weeks": zod.coerce.number().optional(),
+  "startDate": zod.coerce.string().optional(),
+  "endDate": zod.coerce.string().optional()
 })
 
 export const GetProfitSummaryResponse = zod.object({
@@ -365,6 +367,12 @@ export const GetProfitSummaryResponse = zod.object({
   "sales": zod.number(),
   "maintenance": zod.number(),
   "profit": zod.number()
+})),
+  "maintenanceByBike": zod.array(zod.object({
+  "bikeId": zod.number(),
+  "bikeName": zod.string(),
+  "totalCost": zod.number(),
+  "recordCount": zod.number()
 }))
 })
 

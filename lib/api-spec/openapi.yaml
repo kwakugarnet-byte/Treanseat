@@ -467,6 +467,16 @@ paths:
           required: false
           schema:
             type: integer
+        - name: startDate
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: endDate
+          in: query
+          required: false
+          schema:
+            type: string
       responses:
         "200":
           description: Profit breakdown
@@ -1029,7 +1039,24 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/WeeklyProfit"
-      required: [totalSales, totalMaintenance, profit, weeklyBreakdown]
+        maintenanceByBike:
+          type: array
+          items:
+            $ref: "#/components/schemas/MaintenanceByBike"
+      required: [totalSales, totalMaintenance, profit, weeklyBreakdown, maintenanceByBike]
+
+    MaintenanceByBike:
+      type: object
+      properties:
+        bikeId:
+          type: integer
+        bikeName:
+          type: string
+        totalCost:
+          type: number
+        recordCount:
+          type: integer
+      required: [bikeId, bikeName, totalCost, recordCount]
 
     WeeklyProfit:
       type: object

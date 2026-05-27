@@ -58,26 +58,40 @@ router.get("/dashboard/summary", requireAuth, async (req: any, res) => {
 router.get("/dashboard/profit", requireAdmin, async (req: any, res) => {
   try {
     const weeks = parseInt(String(req.query.weeks ?? "12"));
-    const allSales = await db.select().from(salesTable);
-    const allMaintenance = await db.select().from(maintenanceTable);
+    const startDate = req.query.startDate ? String(req.query.startDate) : null;
+    const endDate = req.query.endDate ? String(req.query.endDate) : null;
+
+    let allSales = await db.select().from(salesTable);
+    let allMaintenance = await db.select().from(maintenanceTable);
+    const allBikes = await db.select().from(bikesTable);
+    const bikeMap = new Map(allBikes.map(b => [b.id, b.name]));
+
+    if (startDate && endDate) {
+      allSales = allSales.filter(s => s.weekStart >= startDate && s.weekStart <= endDate);
+      allMaintenance = allMaintenance.filter(m => m.date >= startDate && m.date <= endDate);
+    } else {
+      // fall back to weeks-based filter
+      const cutoff = new Date();
+      cutoff.setDate(cutoff.getDate() - weeks * 7);
+      const cutoffStr = cutoff.toISOString().slice(0, 10);
+      allSales = allSales.filter(s => s.weekStart >= cutoffStr);
+      allMaintenance = allMaintenance.filter(m => m.date >= cutoffStr);
+    }
 
     const totalSales = allSales.reduce((sum, s) => sum + parseFloat(s.amount), 0);
     const totalMaintenance = allMaintenance.reduce((sum, m) => sum + parseFloat(m.cost), 0);
     const profit = totalSales - totalMaintenance;
 
     const weeklyMap = new Map<string, { sales: number; maintenance: number }>();
-
     for (const sale of allSales) {
       const key = sale.weekStart;
       if (!weeklyMap.has(key)) weeklyMap.set(key, { sales: 0, maintenance: 0 });
       weeklyMap.get(key)!.sales += parseFloat(sale.amount);
     }
-
     for (const m of allMaintenance) {
       const date = new Date(m.date);
-      const dayOfWeek = date.getDay();
       const weekStartDate = new Date(date);
-      weekStartDate.setDate(date.getDate() - dayOfWeek);
+      weekStartDate.setDate(date.getDate() - date.getDay());
       const key = weekStartDate.toISOString().slice(0, 10);
       if (!weeklyMap.has(key)) weeklyMap.set(key, { sales: 0, maintenance: 0 });
       weeklyMap.get(key)!.maintenance += parseFloat(m.cost);
@@ -85,7 +99,6 @@ router.get("/dashboard/profit", requireAdmin, async (req: any, res) => {
 
     const weeklyBreakdown = Array.from(weeklyMap.entries())
       .sort(([a], [b]) => a.localeCompare(b))
-      .slice(-weeks)
       .map(([weekStart, data]) => ({
         weekStart,
         sales: data.sales,
@@ -93,7 +106,23 @@ router.get("/dashboard/profit", requireAdmin, async (req: any, res) => {
         profit: data.sales - data.maintenance,
       }));
 
-    return res.json({ totalSales, totalMaintenance, profit, weeklyBreakdown });
+    // maintenance by bike
+    const bikeMaintenanceMap = new Map<number, { totalCost: number; recordCount: number }>();
+    for (const m of allMaintenance) {
+      if (!bikeMaintenanceMap.has(m.bikeId)) bikeMaintenanceMap.set(m.bikeId, { totalCost: 0, recordCount: 0 });
+      bikeMaintenanceMap.get(m.bikeId)!.totalCost += parseFloat(m.cost);
+      bikeMaintenanceMap.get(m.bikeId)!.recordCount += 1;
+    }
+    const maintenanceByBike = Array.from(bikeMaintenanceMap.entries())
+      .map(([bikeId, data]) => ({
+        bikeId,
+        bikeName: bikeMap.get(bikeId) ?? "Unknown",
+        totalCost: data.totalCost,
+        recordCount: data.recordCount,
+      }))
+      .sort((a, b) => b.totalCost - a.totalCost);
+
+    return res.json({ totalSales, totalMaintenance, profit, weeklyBreakdown, maintenanceByBike });
   } catch (err) {
     return res.status(500).json({ error: "Internal server error" });
   }

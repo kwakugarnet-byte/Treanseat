@@ -241,11 +241,19 @@ export interface WeeklyProfit {
   profit: number;
 }
 
+export interface MaintenanceByBike {
+  bikeId: number;
+  bikeName: string;
+  totalCost: number;
+  recordCount: number;
+}
+
 export interface ProfitSummary {
   totalSales: number;
   totalMaintenance: number;
   profit: number;
   weeklyBreakdown: WeeklyProfit[];
+  maintenanceByBike: MaintenanceByBike[];
 }
 
 export interface BikePerformance {
@@ -333,6 +341,8 @@ bikeId?: number;
 
 export type GetProfitSummaryParams = {
 weeks?: number;
+startDate?: string;
+endDate?: string;
 };
 
 export type ListSnookerSessionsParams = {

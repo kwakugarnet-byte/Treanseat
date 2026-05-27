@@ -6,8 +6,9 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type GetProfitSummaryParams = {
-weeks?: number;
-startDate?: string;
-endDate?: string;
-};
+export interface MaintenanceByBike {
+  bikeId: number;
+  bikeName: string;
+  totalCost: number;
+  recordCount: number;
+}
