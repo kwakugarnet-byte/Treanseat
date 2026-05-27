@@ -1,6 +1,5 @@
 import { Router } from "express";
-import { db, bikesTable } from "@workspace/db";
-import { ridersTable } from "@workspace/db/src/schema/riders";
+import { db, bikesTable, ridersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { requireAuth } from "./auth";
 

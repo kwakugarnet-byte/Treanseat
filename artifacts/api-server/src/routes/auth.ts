@@ -39,6 +39,15 @@ function requireAdmin(req: any, res: any, next: any) {
 
 export { requireAuth, requireAdmin, sessions, hashPin };
 
+router.get("/auth/staff", async (_req, res) => {
+  try {
+    const users = await db.select({ id: usersTable.id, name: usersTable.name, role: usersTable.role }).from(usersTable).orderBy(usersTable.name);
+    return res.json(users);
+  } catch (err) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 router.post("/auth/login", async (req, res) => {
   try {
     const { pin } = req.body;
