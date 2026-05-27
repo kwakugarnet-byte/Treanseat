@@ -15,7 +15,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Plus, MoreHorizontal, PenSquare, Trash2, RefreshCw, User } from "lucide-react";
+import { Plus, MoreHorizontal, PenSquare, Trash2, RefreshCw, User, UserX } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Label } from "@/components/ui/label";
 
@@ -176,7 +176,12 @@ export function Bikes() {
                           </div>
                         </div>
                       ) : (
-                        <span className="text-xs text-muted-foreground italic">Unassigned</span>
+                        <div className="flex items-center gap-1.5">
+                          <UserX className="h-3.5 w-3.5 text-amber-500" />
+                          <span className="text-xs font-medium text-amber-600 bg-amber-50 border border-amber-200 rounded px-1.5 py-0.5">
+                            No rider assigned
+                          </span>
+                        </div>
                       )}
                     </TableCell>
                     <TableCell className="text-muted-foreground text-sm">
