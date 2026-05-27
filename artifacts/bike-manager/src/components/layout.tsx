@@ -1,6 +1,6 @@
 import { useAuth } from "@/hooks/use-auth";
 import { Link, useLocation } from "wouter";
-import { Bike, LayoutDashboard, LogOut, Users, Receipt, PenTool, BarChart3, Menu, CircleDot } from "lucide-react";
+import { LayoutDashboard, LogOut, Users, Receipt, PenTool, BarChart3, Menu, CircleDot, Bike } from "lucide-react";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { useLogout } from "@workspace/api-client-react";
@@ -71,9 +71,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex w-64 flex-col border-r bg-sidebar h-screen sticky top-0">
         <div className="p-6 border-b border-sidebar-border h-[72px] flex items-center">
-          <div className="flex items-center gap-2 font-bold text-lg tracking-tight uppercase">
-            <Bike className="h-6 w-6 text-primary" />
-            <span>Fleet Manager</span>
+          <div className="flex items-center gap-2">
+            <img src="/logo.jpg" alt="Trendy" className="h-8 w-8 object-contain rounded" />
+            <span className="font-bold text-lg tracking-tight uppercase text-sidebar-foreground">Trendy</span>
           </div>
         </div>
         
@@ -105,9 +105,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
               </SheetTrigger>
               <SheetContent side="left" className="w-[280px] p-0 flex flex-col bg-sidebar border-r-0">
                 <div className="p-6 border-b h-[72px] flex items-center">
-                  <div className="flex items-center gap-2 font-bold text-lg tracking-tight uppercase">
-                    <Bike className="h-6 w-6 text-primary" />
-                    <span>Fleet</span>
+                  <div className="flex items-center gap-2">
+                    <img src="/logo.jpg" alt="Trendy" className="h-8 w-8 object-contain rounded" />
+                    <span className="font-bold text-lg tracking-tight uppercase text-sidebar-foreground">Trendy</span>
                   </div>
                 </div>
                 <div className="p-4 flex-1">
@@ -115,7 +115,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 </div>
               </SheetContent>
             </Sheet>
-            <div className="font-bold tracking-tight uppercase">Fleet</div>
+            <div className="flex items-center gap-2">
+              <img src="/logo.jpg" alt="Trendy" className="h-7 w-7 object-contain rounded" />
+              <span className="font-bold tracking-tight uppercase">Trendy</span>
+            </div>
           </div>
           <div className="hidden md:block">
             {/* Title could go here based on route */}

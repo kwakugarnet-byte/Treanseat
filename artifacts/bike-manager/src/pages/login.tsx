@@ -4,7 +4,7 @@ import { useLogin } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Bike, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export function Login() {
@@ -34,11 +34,10 @@ export function Login() {
     <div className="min-h-screen flex items-center justify-center bg-muted/40 p-4">
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center space-y-4">
-          <div className="mx-auto bg-primary/20 w-16 h-16 rounded-full flex items-center justify-center">
-            <Bike className="w-8 h-8 text-primary" />
+          <div className="mx-auto w-24 h-24 flex items-center justify-center">
+            <img src="/logo.jpg" alt="Trendy" className="w-full h-full object-contain rounded-md" />
           </div>
           <div className="space-y-2">
-            <CardTitle className="text-2xl uppercase tracking-tight">Fleet Manager</CardTitle>
             <CardDescription>Enter your PIN to access the dashboard</CardDescription>
           </div>
         </CardHeader>
