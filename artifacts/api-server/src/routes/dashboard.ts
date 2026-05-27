@@ -169,7 +169,7 @@ router.get("/dashboard/combined", requireAuth, async (req: any, res) => {
     const snookerSessions = allSessions.filter(s => s.date.startsWith(month));
 
     const bikeRevenue = bikeSales.reduce((sum, s) => sum + parseFloat(s.amount), 0);
-    const snookerRevenue = snookerSessions.reduce((sum, s) => sum + s.coinTotal, 0);
+    const snookerRevenue = snookerSessions.reduce((sum, s) => sum + parseFloat(String(s.coinTotal)), 0);
     const totalRevenue = bikeRevenue + snookerRevenue;
 
     const managerSalaries = managers.map(u => ({

@@ -60,11 +60,11 @@ export function Pay() {
     }
   };
 
-  const bikeRevenue = data?.bikeRevenue ?? 0;
-  const snookerRevenue = data?.snookerRevenue ?? 0;
-  const totalRevenue = data?.totalRevenue ?? 0;
-  const totalSalaries = data?.totalSalaries ?? 0;
-  const netProfit = data?.netProfit ?? 0;
+  const bikeRevenue = Number(data?.bikeRevenue ?? 0);
+  const snookerRevenue = Number(data?.snookerRevenue ?? 0);
+  const totalRevenue = Number(data?.totalRevenue ?? 0);
+  const totalSalaries = Number(data?.totalSalaries ?? 0);
+  const netProfit = Number(data?.netProfit ?? 0);
 
   const bikePct = totalRevenue > 0 ? (bikeRevenue / totalRevenue) * 100 : 0;
   const snookerPct = totalRevenue > 0 ? (snookerRevenue / totalRevenue) * 100 : 0;
