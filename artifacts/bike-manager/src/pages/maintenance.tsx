@@ -42,46 +42,79 @@ function CostDiff({ cost, prevCost }: { cost: number; prevCost: number | null | 
   );
 }
 
-function NextDue({ date, frequencyDays }: { date: string; frequencyDays: number | undefined }) {
-  if (!frequencyDays || frequencyDays <= 0) return <span className="text-muted-foreground text-xs">—</span>;
-  const last = new Date(date);
-  const due = new Date(last);
-  due.setDate(due.getDate() + frequencyDays);
+function frequencyLabel(days: number) {
+  if (!days || days === 0) return "Auto-detect";
+  if (days === 7) return "Every week";
+  if (days === 14) return "Every 2 weeks";
+  if (days === 28) return "Every 4 weeks";
+  if (days === 30) return "Every month";
+  if (days === 90) return "Every 3 months";
+  if (days % 7 === 0) return `Every ${days / 7} weeks`;
+  return `Every ${days} days`;
+}
+
+function autoDetectGap(allRecords: any[], bikeId: number, typeId: number | null): number | null {
+  if (!typeId) return null;
+  const relevant = allRecords
+    .filter(r => r.bikeId === bikeId && r.typeId === typeId)
+    .sort((a, b) => a.date.localeCompare(b.date));
+  if (relevant.length < 2) return null;
+  let total = 0;
+  for (let i = 1; i < relevant.length; i++) {
+    total += (new Date(relevant[i].date).getTime() - new Date(relevant[i - 1].date).getTime()) / 86400000;
+  }
+  return Math.round(total / (relevant.length - 1));
+}
+
+function NextDue({ record, frequencyDays, allRecords }: {
+  record: any;
+  frequencyDays: number | undefined;
+  allRecords: any[];
+}) {
+  if (!record) return <span className="text-muted-foreground text-xs">—</span>;
+
+  let effectiveDays = frequencyDays ?? 0;
+  let isAuto = false;
+
+  if (effectiveDays === 0) {
+    const detected = autoDetectGap(allRecords, record.bikeId, record.typeId);
+    if (detected && detected > 0) {
+      effectiveDays = detected;
+      isAuto = true;
+    }
+  }
+
+  if (effectiveDays <= 0) {
+    return <span className="text-muted-foreground text-xs">—</span>;
+  }
+
+  const due = new Date(record.date);
+  due.setDate(due.getDate() + effectiveDays);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const diffMs = due.getTime() - today.getTime();
-  const diffDays = Math.round(diffMs / 86400000);
+  const diffDays = Math.round((due.getTime() - today.getTime()) / 86400000);
+  const autoTag = isAuto ? <span className="opacity-50 ml-1">(~{effectiveDays}d auto)</span> : null;
+
   if (diffDays < 0) return (
     <span className="flex items-center gap-1 text-xs text-destructive font-medium">
-      <AlertCircle className="h-3 w-3" /> Overdue {Math.abs(diffDays)}d
+      <AlertCircle className="h-3 w-3" /> Overdue {Math.abs(diffDays)}d{autoTag}
     </span>
   );
   if (diffDays === 0) return (
     <span className="flex items-center gap-1 text-xs text-amber-600 font-medium">
-      <Clock className="h-3 w-3" /> Due today
+      <Clock className="h-3 w-3" /> Due today{autoTag}
     </span>
   );
   if (diffDays <= 7) return (
     <span className="flex items-center gap-1 text-xs text-amber-600 font-medium">
-      <Clock className="h-3 w-3" /> In {diffDays}d
+      <Clock className="h-3 w-3" /> In {diffDays}d{autoTag}
     </span>
   );
   return (
     <span className="flex items-center gap-1 text-xs text-muted-foreground">
-      <Clock className="h-3 w-3" /> {due.toLocaleDateString()}
+      <Clock className="h-3 w-3" /> {due.toLocaleDateString()}{autoTag}
     </span>
   );
-}
-
-function frequencyLabel(days: number) {
-  if (!days || days === 0) return "No schedule";
-  if (days === 7) return "Weekly";
-  if (days === 14) return "Every 2 weeks";
-  if (days === 28) return "Every 4 weeks";
-  if (days === 30) return "Monthly";
-  if (days === 90) return "Every 3 months";
-  if (days % 7 === 0) return `Every ${days / 7} weeks`;
-  return `Every ${days} days`;
 }
 
 function ManageTypesDialog() {
@@ -144,7 +177,7 @@ function ManageTypesDialog() {
               min="0"
               value={newFreq}
               onChange={e => setNewFreq(e.target.value)}
-              placeholder="0 = no schedule"
+              placeholder="0 = auto-detect"
               className="flex-1 h-8 text-sm"
             />
             <span className="text-xs text-muted-foreground whitespace-nowrap">{frequencyLabel(parseInt(newFreq) || 0)}</span>
@@ -193,7 +226,9 @@ function ManageTypesDialog() {
                     <span className="text-xs text-muted-foreground group-hover:text-foreground transition-colors">
                       {frequencyLabel(t.frequencyDays ?? 0)}
                     </span>
-                    <span className="text-xs text-muted-foreground/50 group-hover:text-muted-foreground ml-1">(click to edit)</span>
+                    <span className="text-xs text-muted-foreground/50 group-hover:text-muted-foreground ml-1">
+                      {(t.frequencyDays ?? 0) === 0 ? "(learns from history — click to override)" : "(click to edit)"}
+                    </span>
                   </div>
                 )}
               </div>
@@ -264,9 +299,12 @@ function MaintenanceForm({
           {types.length === 0 && (
             <p className="text-xs text-muted-foreground">No types defined yet — use "Manage Types" to add some.</p>
           )}
-          {selectedType && selectedType.frequencyDays > 0 && (
+          {selectedType && (
             <p className="text-xs text-muted-foreground flex items-center gap-1">
-              <Clock className="h-3 w-3" /> Scheduled {frequencyLabel(selectedType.frequencyDays)}
+              <Clock className="h-3 w-3" />
+              {selectedType.frequencyDays > 0
+                ? `Scheduled ${frequencyLabel(selectedType.frequencyDays)}`
+                : "Frequency will be auto-detected from history"}
             </p>
           )}
         </div>
@@ -457,7 +495,7 @@ export function Maintenance() {
                         <CostDiff cost={record.cost} prevCost={record.prevCost} />
                       </TableCell>
                       <TableCell>
-                        <NextDue date={record.date} frequencyDays={type?.frequencyDays} />
+                        <NextDue record={record} frequencyDays={type?.frequencyDays} allRecords={records ?? []} />
                       </TableCell>
                       <TableCell>
                         <DropdownMenu>
