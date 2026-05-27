@@ -40,7 +40,7 @@ export function Login() {
     e.preventDefault();
     if (!pin) return;
     try {
-      const result = await loginMutation.mutateAsync({ data: { pin } });
+      const result = await loginMutation.mutateAsync({ data: { userId: selectedUser!.id, pin } });
       login(result.token);
     } catch {
       toast({

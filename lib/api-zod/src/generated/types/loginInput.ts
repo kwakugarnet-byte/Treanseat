@@ -7,5 +7,6 @@
  */
 
 export interface LoginInput {
+  userId: number;
   pin: string;
 }

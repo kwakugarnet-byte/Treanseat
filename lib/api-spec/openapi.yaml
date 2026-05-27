@@ -1104,9 +1104,11 @@ components:
     LoginInput:
       type: object
       properties:
+        userId:
+          type: integer
         pin:
           type: string
-      required: [pin]
+      required: [userId, pin]
 
     AuthResult:
       type: object

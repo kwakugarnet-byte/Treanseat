@@ -51,6 +51,7 @@ export interface SuccessResponse {
 }
 
 export interface LoginInput {
+  userId: number;
   pin: string;
 }
 

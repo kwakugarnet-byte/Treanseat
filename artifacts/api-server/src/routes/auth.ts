@@ -48,15 +48,17 @@ router.get("/auth/staff", async (_req, res) => {
 
 router.post("/auth/login", async (req, res) => {
   try {
-    const { pin } = req.body;
-    if (!pin) {
-      return res.status(400).json({ error: "PIN is required" });
+    const { userId, pin } = req.body;
+    if (!userId || !pin) {
+      return res.status(400).json({ error: "userId and PIN are required" });
     }
 
     const hashed = hashPin(String(pin));
-    const users = await db.select().from(usersTable).where(eq(usersTable.pin, hashed));
+    const users = await db.select().from(usersTable).where(
+      eq(usersTable.id, parseInt(userId))
+    );
 
-    if (!users[0]) {
+    if (!users[0] || users[0].pin !== hashed) {
       return res.status(401).json({ error: "Invalid PIN" });
     }
 

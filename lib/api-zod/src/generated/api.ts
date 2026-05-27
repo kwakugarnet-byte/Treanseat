@@ -20,6 +20,7 @@ export const HealthCheckResponse = zod.object({
  * @summary Login with PIN
  */
 export const LoginBody = zod.object({
+  "userId": zod.number(),
   "pin": zod.string()
 })
 
