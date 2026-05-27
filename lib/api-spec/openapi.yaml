@@ -23,6 +23,10 @@ tags:
     description: User management
   - name: snooker
     description: Snooker board management
+  - name: snooker-maintenance
+    description: Snooker equipment maintenance
+  - name: snooker-workers
+    description: Snooker worker and salary management
   - name: dashboard
     description: Dashboard summaries
   - name: riders
@@ -661,6 +665,178 @@ paths:
               schema:
                 $ref: "#/components/schemas/SuccessResponse"
 
+  /snooker/maintenance:
+    get:
+      operationId: listSnookerMaintenance
+      tags: [snooker-maintenance]
+      summary: List snooker maintenance records
+      responses:
+        "200":
+          description: List
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SnookerMaintenanceRecord"
+    post:
+      operationId: createSnookerMaintenance
+      tags: [snooker-maintenance]
+      summary: Log a snooker maintenance expense
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SnookerMaintenanceInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SnookerMaintenanceRecord"
+
+  /snooker/maintenance/{id}:
+    patch:
+      operationId: updateSnookerMaintenance
+      tags: [snooker-maintenance]
+      summary: Update a snooker maintenance record
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SnookerMaintenanceInput"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SnookerMaintenanceRecord"
+    delete:
+      operationId: deleteSnookerMaintenance
+      tags: [snooker-maintenance]
+      summary: Delete a snooker maintenance record
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /snooker/workers:
+    get:
+      operationId: listSnookerWorkers
+      tags: [snooker-workers]
+      summary: List snooker workers
+      responses:
+        "200":
+          description: List
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SnookerWorker"
+    post:
+      operationId: createSnookerWorker
+      tags: [snooker-workers]
+      summary: Create a snooker worker (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SnookerWorkerInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SnookerWorker"
+
+  /snooker/workers/{id}:
+    patch:
+      operationId: updateSnookerWorker
+      tags: [snooker-workers]
+      summary: Update a snooker worker (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SnookerWorkerInput"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SnookerWorker"
+    delete:
+      operationId: deleteSnookerWorker
+      tags: [snooker-workers]
+      summary: Delete a snooker worker (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /snooker/salary:
+    get:
+      operationId: getSnookerSalary
+      tags: [snooker-workers]
+      summary: Get monthly salary summary with loss deductions
+      parameters:
+        - name: workerId
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: month
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Salary summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SnookerSalarySummary"
+
   /snooker/summary:
     get:
       operationId: getSnookerSummary
@@ -1171,6 +1347,96 @@ components:
           type: number
       required: [bikeId, bikeName, totalSales, totalMaintenance, weeksRecorded, averageWeeklySales]
 
+    SnookerMaintenanceRecord:
+      type: object
+      properties:
+        id:
+          type: integer
+        typeId:
+          type: ["integer", "null"]
+        typeName:
+          type: ["string", "null"]
+        date:
+          type: string
+        cost:
+          type: number
+        notes:
+          type: ["string", "null"]
+        prevCost:
+          type: ["number", "null"]
+        createdAt:
+          type: string
+      required: [id, date, cost, createdAt]
+
+    SnookerMaintenanceInput:
+      type: object
+      properties:
+        typeId:
+          type: integer
+        date:
+          type: string
+        cost:
+          type: number
+        notes:
+          type: string
+      required: [date, cost]
+
+    SnookerWorker:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        phone:
+          type: string
+        monthlySalary:
+          type: number
+        isActive:
+          type: integer
+        createdAt:
+          type: string
+      required: [id, name, phone, monthlySalary, isActive, createdAt]
+
+    SnookerWorkerInput:
+      type: object
+      properties:
+        name:
+          type: string
+        phone:
+          type: string
+        monthlySalary:
+          type: number
+        isActive:
+          type: integer
+      required: [name, phone, monthlySalary]
+
+    SnookerSalarySummary:
+      type: object
+      properties:
+        workerId:
+          type: integer
+        workerName:
+          type: string
+        month:
+          type: ["string", "null"]
+        monthlySalary:
+          type: number
+        totalLoss:
+          type: number
+        netPay:
+          type: number
+        deductions:
+          type: array
+          items:
+            type: object
+            properties:
+              date:
+                type: string
+              variance:
+                type: number
+      required: [workerId, workerName, monthlySalary, totalLoss, netPay, deductions]
+
     SnookerBoard:
       type: object
       properties:
@@ -1237,7 +1503,7 @@ components:
           type: string
         recordedBy:
           type: string
-      required: [boardId, date, coinsCount, cashierAmount]
+      required: [date, coinsCount, cashierAmount]
 
     SnookerSessionUpdate:
       type: object

@@ -285,6 +285,60 @@ export interface BikePerformance {
   averageWeeklySales: number;
 }
 
+export interface SnookerMaintenanceRecord {
+  id: number;
+  /** @nullable */
+  typeId?: number | null;
+  /** @nullable */
+  typeName?: string | null;
+  date: string;
+  cost: number;
+  /** @nullable */
+  notes?: string | null;
+  /** @nullable */
+  prevCost?: number | null;
+  createdAt: string;
+}
+
+export interface SnookerMaintenanceInput {
+  typeId?: number;
+  date: string;
+  cost: number;
+  notes?: string;
+}
+
+export interface SnookerWorker {
+  id: number;
+  name: string;
+  phone: string;
+  monthlySalary: number;
+  isActive: number;
+  createdAt: string;
+}
+
+export interface SnookerWorkerInput {
+  name: string;
+  phone: string;
+  monthlySalary: number;
+  isActive?: number;
+}
+
+export type SnookerSalarySummaryDeductionsItem = {
+  date?: string;
+  variance?: number;
+};
+
+export interface SnookerSalarySummary {
+  workerId: number;
+  workerName: string;
+  /** @nullable */
+  month?: string | null;
+  monthlySalary: number;
+  totalLoss: number;
+  netPay: number;
+  deductions: SnookerSalarySummaryDeductionsItem[];
+}
+
 export interface SnookerBoard {
   id: number;
   name: string;
@@ -317,7 +371,7 @@ export interface SnookerSession {
 }
 
 export interface SnookerSessionInput {
-  boardId: number;
+  boardId?: number;
   date: string;
   coinsCount: number;
   cashierAmount: number;
@@ -368,5 +422,10 @@ endDate?: string;
 export type ListSnookerSessionsParams = {
 boardId?: number;
 date?: string;
+};
+
+export type GetSnookerSalaryParams = {
+workerId: number;
+month?: string;
 };
 

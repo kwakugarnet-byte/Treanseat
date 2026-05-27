@@ -6,11 +6,9 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface SnookerSessionInput {
-  boardId?: number;
+export interface SnookerMaintenanceInput {
+  typeId?: number;
   date: string;
-  coinsCount: number;
-  cashierAmount: number;
+  cost: number;
   notes?: string;
-  recordedBy?: string;
 }

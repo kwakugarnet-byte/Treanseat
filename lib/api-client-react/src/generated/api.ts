@@ -28,6 +28,7 @@ import type {
   DashboardSummary,
   ErrorResponse,
   GetProfitSummaryParams,
+  GetSnookerSalaryParams,
   HealthStatus,
   ListMaintenanceParams,
   ListSalesParams,
@@ -47,10 +48,15 @@ import type {
   SaleUpdate,
   SnookerBoard,
   SnookerBoardInput,
+  SnookerMaintenanceInput,
+  SnookerMaintenanceRecord,
+  SnookerSalarySummary,
   SnookerSession,
   SnookerSessionInput,
   SnookerSessionUpdate,
   SnookerSummary,
+  SnookerWorker,
+  SnookerWorkerInput,
   SuccessResponse,
   User,
   UserInput,
@@ -2515,6 +2521,670 @@ export const useDeleteSnookerSession = <TError = ErrorType<unknown>,
       > => {
       return useMutation(getDeleteSnookerSessionMutationOptions(options));
     }
+
+export const getListSnookerMaintenanceUrl = () => {
+
+
+
+
+  return `/api/snooker/maintenance`
+}
+
+/**
+ * @summary List snooker maintenance records
+ */
+export const listSnookerMaintenance = async ( options?: RequestInit): Promise<SnookerMaintenanceRecord[]> => {
+
+  return customFetch<SnookerMaintenanceRecord[]>(getListSnookerMaintenanceUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListSnookerMaintenanceQueryKey = () => {
+    return [
+    `/api/snooker/maintenance`
+    ] as const;
+    }
+
+
+export const getListSnookerMaintenanceQueryOptions = <TData = Awaited<ReturnType<typeof listSnookerMaintenance>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listSnookerMaintenance>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListSnookerMaintenanceQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listSnookerMaintenance>>> = ({ signal }) => listSnookerMaintenance({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listSnookerMaintenance>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListSnookerMaintenanceQueryResult = NonNullable<Awaited<ReturnType<typeof listSnookerMaintenance>>>
+export type ListSnookerMaintenanceQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List snooker maintenance records
+ */
+
+export function useListSnookerMaintenance<TData = Awaited<ReturnType<typeof listSnookerMaintenance>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listSnookerMaintenance>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListSnookerMaintenanceQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getCreateSnookerMaintenanceUrl = () => {
+
+
+
+
+  return `/api/snooker/maintenance`
+}
+
+/**
+ * @summary Log a snooker maintenance expense
+ */
+export const createSnookerMaintenance = async (snookerMaintenanceInput: SnookerMaintenanceInput, options?: RequestInit): Promise<SnookerMaintenanceRecord> => {
+
+  return customFetch<SnookerMaintenanceRecord>(getCreateSnookerMaintenanceUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      snookerMaintenanceInput,)
+  }
+);}
+
+
+
+
+export const getCreateSnookerMaintenanceMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createSnookerMaintenance>>, TError,{data: BodyType<SnookerMaintenanceInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createSnookerMaintenance>>, TError,{data: BodyType<SnookerMaintenanceInput>}, TContext> => {
+
+const mutationKey = ['createSnookerMaintenance'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createSnookerMaintenance>>, {data: BodyType<SnookerMaintenanceInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createSnookerMaintenance(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateSnookerMaintenanceMutationResult = NonNullable<Awaited<ReturnType<typeof createSnookerMaintenance>>>
+    export type CreateSnookerMaintenanceMutationBody = BodyType<SnookerMaintenanceInput>
+    export type CreateSnookerMaintenanceMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Log a snooker maintenance expense
+ */
+export const useCreateSnookerMaintenance = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createSnookerMaintenance>>, TError,{data: BodyType<SnookerMaintenanceInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createSnookerMaintenance>>,
+        TError,
+        {data: BodyType<SnookerMaintenanceInput>},
+        TContext
+      > => {
+      return useMutation(getCreateSnookerMaintenanceMutationOptions(options));
+    }
+
+export const getUpdateSnookerMaintenanceUrl = (id: number,) => {
+
+
+
+
+  return `/api/snooker/maintenance/${id}`
+}
+
+/**
+ * @summary Update a snooker maintenance record
+ */
+export const updateSnookerMaintenance = async (id: number,
+    snookerMaintenanceInput: SnookerMaintenanceInput, options?: RequestInit): Promise<SnookerMaintenanceRecord> => {
+
+  return customFetch<SnookerMaintenanceRecord>(getUpdateSnookerMaintenanceUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      snookerMaintenanceInput,)
+  }
+);}
+
+
+
+
+export const getUpdateSnookerMaintenanceMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateSnookerMaintenance>>, TError,{id: number;data: BodyType<SnookerMaintenanceInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateSnookerMaintenance>>, TError,{id: number;data: BodyType<SnookerMaintenanceInput>}, TContext> => {
+
+const mutationKey = ['updateSnookerMaintenance'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateSnookerMaintenance>>, {id: number;data: BodyType<SnookerMaintenanceInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateSnookerMaintenance(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateSnookerMaintenanceMutationResult = NonNullable<Awaited<ReturnType<typeof updateSnookerMaintenance>>>
+    export type UpdateSnookerMaintenanceMutationBody = BodyType<SnookerMaintenanceInput>
+    export type UpdateSnookerMaintenanceMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Update a snooker maintenance record
+ */
+export const useUpdateSnookerMaintenance = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateSnookerMaintenance>>, TError,{id: number;data: BodyType<SnookerMaintenanceInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateSnookerMaintenance>>,
+        TError,
+        {id: number;data: BodyType<SnookerMaintenanceInput>},
+        TContext
+      > => {
+      return useMutation(getUpdateSnookerMaintenanceMutationOptions(options));
+    }
+
+export const getDeleteSnookerMaintenanceUrl = (id: number,) => {
+
+
+
+
+  return `/api/snooker/maintenance/${id}`
+}
+
+/**
+ * @summary Delete a snooker maintenance record
+ */
+export const deleteSnookerMaintenance = async (id: number, options?: RequestInit): Promise<SuccessResponse> => {
+
+  return customFetch<SuccessResponse>(getDeleteSnookerMaintenanceUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getDeleteSnookerMaintenanceMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteSnookerMaintenance>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteSnookerMaintenance>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['deleteSnookerMaintenance'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteSnookerMaintenance>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteSnookerMaintenance(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteSnookerMaintenanceMutationResult = NonNullable<Awaited<ReturnType<typeof deleteSnookerMaintenance>>>
+
+    export type DeleteSnookerMaintenanceMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Delete a snooker maintenance record
+ */
+export const useDeleteSnookerMaintenance = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteSnookerMaintenance>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteSnookerMaintenance>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getDeleteSnookerMaintenanceMutationOptions(options));
+    }
+
+export const getListSnookerWorkersUrl = () => {
+
+
+
+
+  return `/api/snooker/workers`
+}
+
+/**
+ * @summary List snooker workers
+ */
+export const listSnookerWorkers = async ( options?: RequestInit): Promise<SnookerWorker[]> => {
+
+  return customFetch<SnookerWorker[]>(getListSnookerWorkersUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListSnookerWorkersQueryKey = () => {
+    return [
+    `/api/snooker/workers`
+    ] as const;
+    }
+
+
+export const getListSnookerWorkersQueryOptions = <TData = Awaited<ReturnType<typeof listSnookerWorkers>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listSnookerWorkers>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListSnookerWorkersQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listSnookerWorkers>>> = ({ signal }) => listSnookerWorkers({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listSnookerWorkers>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListSnookerWorkersQueryResult = NonNullable<Awaited<ReturnType<typeof listSnookerWorkers>>>
+export type ListSnookerWorkersQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List snooker workers
+ */
+
+export function useListSnookerWorkers<TData = Awaited<ReturnType<typeof listSnookerWorkers>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listSnookerWorkers>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListSnookerWorkersQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getCreateSnookerWorkerUrl = () => {
+
+
+
+
+  return `/api/snooker/workers`
+}
+
+/**
+ * @summary Create a snooker worker (admin)
+ */
+export const createSnookerWorker = async (snookerWorkerInput: SnookerWorkerInput, options?: RequestInit): Promise<SnookerWorker> => {
+
+  return customFetch<SnookerWorker>(getCreateSnookerWorkerUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      snookerWorkerInput,)
+  }
+);}
+
+
+
+
+export const getCreateSnookerWorkerMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createSnookerWorker>>, TError,{data: BodyType<SnookerWorkerInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createSnookerWorker>>, TError,{data: BodyType<SnookerWorkerInput>}, TContext> => {
+
+const mutationKey = ['createSnookerWorker'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createSnookerWorker>>, {data: BodyType<SnookerWorkerInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createSnookerWorker(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateSnookerWorkerMutationResult = NonNullable<Awaited<ReturnType<typeof createSnookerWorker>>>
+    export type CreateSnookerWorkerMutationBody = BodyType<SnookerWorkerInput>
+    export type CreateSnookerWorkerMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Create a snooker worker (admin)
+ */
+export const useCreateSnookerWorker = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createSnookerWorker>>, TError,{data: BodyType<SnookerWorkerInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createSnookerWorker>>,
+        TError,
+        {data: BodyType<SnookerWorkerInput>},
+        TContext
+      > => {
+      return useMutation(getCreateSnookerWorkerMutationOptions(options));
+    }
+
+export const getUpdateSnookerWorkerUrl = (id: number,) => {
+
+
+
+
+  return `/api/snooker/workers/${id}`
+}
+
+/**
+ * @summary Update a snooker worker (admin)
+ */
+export const updateSnookerWorker = async (id: number,
+    snookerWorkerInput: SnookerWorkerInput, options?: RequestInit): Promise<SnookerWorker> => {
+
+  return customFetch<SnookerWorker>(getUpdateSnookerWorkerUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      snookerWorkerInput,)
+  }
+);}
+
+
+
+
+export const getUpdateSnookerWorkerMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateSnookerWorker>>, TError,{id: number;data: BodyType<SnookerWorkerInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateSnookerWorker>>, TError,{id: number;data: BodyType<SnookerWorkerInput>}, TContext> => {
+
+const mutationKey = ['updateSnookerWorker'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateSnookerWorker>>, {id: number;data: BodyType<SnookerWorkerInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateSnookerWorker(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateSnookerWorkerMutationResult = NonNullable<Awaited<ReturnType<typeof updateSnookerWorker>>>
+    export type UpdateSnookerWorkerMutationBody = BodyType<SnookerWorkerInput>
+    export type UpdateSnookerWorkerMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Update a snooker worker (admin)
+ */
+export const useUpdateSnookerWorker = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateSnookerWorker>>, TError,{id: number;data: BodyType<SnookerWorkerInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateSnookerWorker>>,
+        TError,
+        {id: number;data: BodyType<SnookerWorkerInput>},
+        TContext
+      > => {
+      return useMutation(getUpdateSnookerWorkerMutationOptions(options));
+    }
+
+export const getDeleteSnookerWorkerUrl = (id: number,) => {
+
+
+
+
+  return `/api/snooker/workers/${id}`
+}
+
+/**
+ * @summary Delete a snooker worker (admin)
+ */
+export const deleteSnookerWorker = async (id: number, options?: RequestInit): Promise<SuccessResponse> => {
+
+  return customFetch<SuccessResponse>(getDeleteSnookerWorkerUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getDeleteSnookerWorkerMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteSnookerWorker>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteSnookerWorker>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['deleteSnookerWorker'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteSnookerWorker>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteSnookerWorker(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteSnookerWorkerMutationResult = NonNullable<Awaited<ReturnType<typeof deleteSnookerWorker>>>
+
+    export type DeleteSnookerWorkerMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Delete a snooker worker (admin)
+ */
+export const useDeleteSnookerWorker = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteSnookerWorker>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteSnookerWorker>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getDeleteSnookerWorkerMutationOptions(options));
+    }
+
+export const getGetSnookerSalaryUrl = (params: GetSnookerSalaryParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/snooker/salary?${stringifiedParams}` : `/api/snooker/salary`
+}
+
+/**
+ * @summary Get monthly salary summary with loss deductions
+ */
+export const getSnookerSalary = async (params: GetSnookerSalaryParams, options?: RequestInit): Promise<SnookerSalarySummary> => {
+
+  return customFetch<SnookerSalarySummary>(getGetSnookerSalaryUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetSnookerSalaryQueryKey = (params?: GetSnookerSalaryParams,) => {
+    return [
+    `/api/snooker/salary`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetSnookerSalaryQueryOptions = <TData = Awaited<ReturnType<typeof getSnookerSalary>>, TError = ErrorType<unknown>>(params: GetSnookerSalaryParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getSnookerSalary>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetSnookerSalaryQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getSnookerSalary>>> = ({ signal }) => getSnookerSalary(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getSnookerSalary>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetSnookerSalaryQueryResult = NonNullable<Awaited<ReturnType<typeof getSnookerSalary>>>
+export type GetSnookerSalaryQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Get monthly salary summary with loss deductions
+ */
+
+export function useGetSnookerSalary<TData = Awaited<ReturnType<typeof getSnookerSalary>>, TError = ErrorType<unknown>>(
+ params: GetSnookerSalaryParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getSnookerSalary>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetSnookerSalaryQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
 
 export const getGetSnookerSummaryUrl = () => {
 

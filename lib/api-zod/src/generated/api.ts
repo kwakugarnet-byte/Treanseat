@@ -468,7 +468,7 @@ export const ListSnookerSessionsResponse = zod.array(ListSnookerSessionsResponse
  * @summary Record a snooker session
  */
 export const CreateSnookerSessionBody = zod.object({
-  "boardId": zod.number(),
+  "boardId": zod.number().optional(),
   "date": zod.string(),
   "coinsCount": zod.number(),
   "cashierAmount": zod.number(),
@@ -515,6 +515,154 @@ export const DeleteSnookerSessionParams = zod.object({
 
 export const DeleteSnookerSessionResponse = zod.object({
   "success": zod.boolean()
+})
+
+
+/**
+ * @summary List snooker maintenance records
+ */
+export const ListSnookerMaintenanceResponseItem = zod.object({
+  "id": zod.number(),
+  "typeId": zod.number().nullish(),
+  "typeName": zod.string().nullish(),
+  "date": zod.string(),
+  "cost": zod.number(),
+  "notes": zod.string().nullish(),
+  "prevCost": zod.number().nullish(),
+  "createdAt": zod.string()
+})
+export const ListSnookerMaintenanceResponse = zod.array(ListSnookerMaintenanceResponseItem)
+
+
+/**
+ * @summary Log a snooker maintenance expense
+ */
+export const CreateSnookerMaintenanceBody = zod.object({
+  "typeId": zod.number().optional(),
+  "date": zod.string(),
+  "cost": zod.number(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Update a snooker maintenance record
+ */
+export const UpdateSnookerMaintenanceParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const UpdateSnookerMaintenanceBody = zod.object({
+  "typeId": zod.number().optional(),
+  "date": zod.string(),
+  "cost": zod.number(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateSnookerMaintenanceResponse = zod.object({
+  "id": zod.number(),
+  "typeId": zod.number().nullish(),
+  "typeName": zod.string().nullish(),
+  "date": zod.string(),
+  "cost": zod.number(),
+  "notes": zod.string().nullish(),
+  "prevCost": zod.number().nullish(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a snooker maintenance record
+ */
+export const DeleteSnookerMaintenanceParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const DeleteSnookerMaintenanceResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary List snooker workers
+ */
+export const ListSnookerWorkersResponseItem = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "phone": zod.string(),
+  "monthlySalary": zod.number(),
+  "isActive": zod.number(),
+  "createdAt": zod.string()
+})
+export const ListSnookerWorkersResponse = zod.array(ListSnookerWorkersResponseItem)
+
+
+/**
+ * @summary Create a snooker worker (admin)
+ */
+export const CreateSnookerWorkerBody = zod.object({
+  "name": zod.string(),
+  "phone": zod.string(),
+  "monthlySalary": zod.number(),
+  "isActive": zod.number().optional()
+})
+
+
+/**
+ * @summary Update a snooker worker (admin)
+ */
+export const UpdateSnookerWorkerParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const UpdateSnookerWorkerBody = zod.object({
+  "name": zod.string(),
+  "phone": zod.string(),
+  "monthlySalary": zod.number(),
+  "isActive": zod.number().optional()
+})
+
+export const UpdateSnookerWorkerResponse = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "phone": zod.string(),
+  "monthlySalary": zod.number(),
+  "isActive": zod.number(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a snooker worker (admin)
+ */
+export const DeleteSnookerWorkerParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const DeleteSnookerWorkerResponse = zod.object({
+  "success": zod.boolean()
+})
+
+
+/**
+ * @summary Get monthly salary summary with loss deductions
+ */
+export const GetSnookerSalaryQueryParams = zod.object({
+  "workerId": zod.coerce.number(),
+  "month": zod.coerce.string().optional()
+})
+
+export const GetSnookerSalaryResponse = zod.object({
+  "workerId": zod.number(),
+  "workerName": zod.string(),
+  "month": zod.string().nullish(),
+  "monthlySalary": zod.number(),
+  "totalLoss": zod.number(),
+  "netPay": zod.number(),
+  "deductions": zod.array(zod.object({
+  "date": zod.string().optional(),
+  "variance": zod.number().optional()
+}))
 })
 
 
