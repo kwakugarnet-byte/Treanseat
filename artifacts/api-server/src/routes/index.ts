@@ -8,6 +8,7 @@ import maintenanceRouter from "./maintenance";
 import dashboardRouter from "./dashboard";
 import snookerRouter from "./snooker";
 import ridersRouter from "./riders";
+import maintenanceTypesRouter from "./maintenance-types";
 
 const router: IRouter = Router();
 
@@ -17,6 +18,7 @@ router.use(usersRouter);
 router.use(bikesRouter);
 router.use(salesRouter);
 router.use(maintenanceRouter);
+router.use(maintenanceTypesRouter);
 router.use(dashboardRouter);
 router.use(snookerRouter);
 router.use(ridersRouter);

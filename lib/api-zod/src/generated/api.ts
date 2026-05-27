@@ -272,9 +272,13 @@ export const ListMaintenanceResponseItem = zod.object({
   "id": zod.number(),
   "bikeId": zod.number(),
   "bikeName": zod.string(),
+  "typeId": zod.number().nullish(),
+  "typeName": zod.string().nullish(),
   "date": zod.string(),
   "cost": zod.number(),
   "description": zod.string(),
+  "notes": zod.string().nullish(),
+  "prevCost": zod.number().nullish(),
   "createdAt": zod.string()
 })
 export const ListMaintenanceResponse = zod.array(ListMaintenanceResponseItem)
@@ -285,9 +289,41 @@ export const ListMaintenanceResponse = zod.array(ListMaintenanceResponseItem)
  */
 export const CreateMaintenanceBody = zod.object({
   "bikeId": zod.number(),
+  "typeId": zod.number().optional(),
   "date": zod.string(),
   "cost": zod.number(),
-  "description": zod.string()
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary List all predefined maintenance types
+ */
+export const ListMaintenanceTypesResponseItem = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "createdAt": zod.string()
+})
+export const ListMaintenanceTypesResponse = zod.array(ListMaintenanceTypesResponseItem)
+
+
+/**
+ * @summary Create a new maintenance type
+ */
+export const CreateMaintenanceTypeBody = zod.object({
+  "name": zod.string()
+})
+
+
+/**
+ * @summary Delete a maintenance type
+ */
+export const DeleteMaintenanceTypeParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const DeleteMaintenanceTypeResponse = zod.object({
+  "success": zod.boolean()
 })
 
 
@@ -300,7 +336,8 @@ export const UpdateMaintenanceParams = zod.object({
 
 export const UpdateMaintenanceBody = zod.object({
   "cost": zod.number().optional(),
-  "description": zod.string().optional(),
+  "typeId": zod.number().optional(),
+  "notes": zod.string().optional(),
   "date": zod.string().optional()
 })
 
@@ -308,9 +345,13 @@ export const UpdateMaintenanceResponse = zod.object({
   "id": zod.number(),
   "bikeId": zod.number(),
   "bikeName": zod.string(),
+  "typeId": zod.number().nullish(),
+  "typeName": zod.string().nullish(),
   "date": zod.string(),
   "cost": zod.number(),
   "description": zod.string(),
+  "notes": zod.string().nullish(),
+  "prevCost": zod.number().nullish(),
   "createdAt": zod.string()
 })
 

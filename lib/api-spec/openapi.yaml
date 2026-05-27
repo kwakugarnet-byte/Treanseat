@@ -17,6 +17,8 @@ tags:
     description: Sales recording
   - name: maintenance
     description: Maintenance expenses
+  - name: maintenance-types
+    description: Predefined maintenance type labels
   - name: users
     description: User management
   - name: snooker
@@ -400,6 +402,57 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/MaintenanceRecord"
+
+  /maintenance-types:
+    get:
+      operationId: listMaintenanceTypes
+      tags: [maintenance-types]
+      summary: List all predefined maintenance types
+      responses:
+        "200":
+          description: List of types
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MaintenanceType"
+    post:
+      operationId: createMaintenanceType
+      tags: [maintenance-types]
+      summary: Create a new maintenance type
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MaintenanceTypeInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MaintenanceType"
+
+  /maintenance-types/{id}:
+    delete:
+      operationId: deleteMaintenanceType
+      tags: [maintenance-types]
+      summary: Delete a maintenance type
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
 
   /maintenance/{id}:
     patch:
@@ -965,6 +1018,24 @@ components:
         notes:
           type: string
 
+    MaintenanceType:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        createdAt:
+          type: string
+      required: [id, name, createdAt]
+
+    MaintenanceTypeInput:
+      type: object
+      properties:
+        name:
+          type: string
+      required: [name]
+
     MaintenanceRecord:
       type: object
       properties:
@@ -974,12 +1045,20 @@ components:
           type: integer
         bikeName:
           type: string
+        typeId:
+          type: ["integer", "null"]
+        typeName:
+          type: ["string", "null"]
         date:
           type: string
         cost:
           type: number
         description:
           type: string
+        notes:
+          type: ["string", "null"]
+        prevCost:
+          type: ["number", "null"]
         createdAt:
           type: string
       required: [id, bikeId, bikeName, date, cost, description, createdAt]
@@ -989,20 +1068,24 @@ components:
       properties:
         bikeId:
           type: integer
+        typeId:
+          type: integer
         date:
           type: string
         cost:
           type: number
-        description:
+        notes:
           type: string
-      required: [bikeId, date, cost, description]
+      required: [bikeId, date, cost]
 
     MaintenanceUpdate:
       type: object
       properties:
         cost:
           type: number
-        description:
+        typeId:
+          type: integer
+        notes:
           type: string
         date:
           type: string

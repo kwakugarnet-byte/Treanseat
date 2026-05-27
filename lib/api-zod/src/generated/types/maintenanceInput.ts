@@ -8,7 +8,8 @@
 
 export interface MaintenanceInput {
   bikeId: number;
+  typeId?: number;
   date: string;
   cost: number;
-  description: string;
+  notes?: string;
 }

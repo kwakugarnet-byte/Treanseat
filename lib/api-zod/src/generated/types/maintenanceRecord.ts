@@ -10,8 +10,16 @@ export interface MaintenanceRecord {
   id: number;
   bikeId: number;
   bikeName: string;
+  /** @nullable */
+  typeId?: number | null;
+  /** @nullable */
+  typeName?: string | null;
   date: string;
   cost: number;
   description: string;
+  /** @nullable */
+  notes?: string | null;
+  /** @nullable */
+  prevCost?: number | null;
   createdAt: string;
 }

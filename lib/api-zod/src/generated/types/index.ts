@@ -25,6 +25,8 @@ export * from './loginInput';
 export * from './maintenanceByBike';
 export * from './maintenanceInput';
 export * from './maintenanceRecord';
+export * from './maintenanceType';
+export * from './maintenanceTypeInput';
 export * from './maintenanceUpdate';
 export * from './profitSummary';
 export * from './rider';

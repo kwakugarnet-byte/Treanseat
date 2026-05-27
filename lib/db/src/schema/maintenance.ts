@@ -2,13 +2,16 @@ import { pgTable, serial, integer, text, numeric, date, timestamp } from "drizzl
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 import { bikesTable } from "./bikes";
+import { maintenanceTypesTable } from "./maintenance-types";
 
 export const maintenanceTable = pgTable("maintenance", {
   id: serial("id").primaryKey(),
   bikeId: integer("bike_id").notNull().references(() => bikesTable.id),
+  typeId: integer("type_id").references(() => maintenanceTypesTable.id),
   date: date("date").notNull(),
   cost: numeric("cost", { precision: 10, scale: 2 }).notNull().default("0"),
   description: text("description").notNull(),
+  notes: text("notes"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

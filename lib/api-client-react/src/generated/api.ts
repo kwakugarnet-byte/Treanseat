@@ -35,6 +35,8 @@ import type {
   LoginInput,
   MaintenanceInput,
   MaintenanceRecord,
+  MaintenanceType,
+  MaintenanceTypeInput,
   MaintenanceUpdate,
   ProfitSummary,
   Rider,
@@ -1546,6 +1548,224 @@ export const useCreateMaintenance = <TError = ErrorType<unknown>,
         TContext
       > => {
       return useMutation(getCreateMaintenanceMutationOptions(options));
+    }
+
+export const getListMaintenanceTypesUrl = () => {
+
+
+
+
+  return `/api/maintenance-types`
+}
+
+/**
+ * @summary List all predefined maintenance types
+ */
+export const listMaintenanceTypes = async ( options?: RequestInit): Promise<MaintenanceType[]> => {
+
+  return customFetch<MaintenanceType[]>(getListMaintenanceTypesUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListMaintenanceTypesQueryKey = () => {
+    return [
+    `/api/maintenance-types`
+    ] as const;
+    }
+
+
+export const getListMaintenanceTypesQueryOptions = <TData = Awaited<ReturnType<typeof listMaintenanceTypes>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listMaintenanceTypes>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListMaintenanceTypesQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listMaintenanceTypes>>> = ({ signal }) => listMaintenanceTypes({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listMaintenanceTypes>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListMaintenanceTypesQueryResult = NonNullable<Awaited<ReturnType<typeof listMaintenanceTypes>>>
+export type ListMaintenanceTypesQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List all predefined maintenance types
+ */
+
+export function useListMaintenanceTypes<TData = Awaited<ReturnType<typeof listMaintenanceTypes>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listMaintenanceTypes>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListMaintenanceTypesQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getCreateMaintenanceTypeUrl = () => {
+
+
+
+
+  return `/api/maintenance-types`
+}
+
+/**
+ * @summary Create a new maintenance type
+ */
+export const createMaintenanceType = async (maintenanceTypeInput: MaintenanceTypeInput, options?: RequestInit): Promise<MaintenanceType> => {
+
+  return customFetch<MaintenanceType>(getCreateMaintenanceTypeUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      maintenanceTypeInput,)
+  }
+);}
+
+
+
+
+export const getCreateMaintenanceTypeMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createMaintenanceType>>, TError,{data: BodyType<MaintenanceTypeInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createMaintenanceType>>, TError,{data: BodyType<MaintenanceTypeInput>}, TContext> => {
+
+const mutationKey = ['createMaintenanceType'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createMaintenanceType>>, {data: BodyType<MaintenanceTypeInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createMaintenanceType(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateMaintenanceTypeMutationResult = NonNullable<Awaited<ReturnType<typeof createMaintenanceType>>>
+    export type CreateMaintenanceTypeMutationBody = BodyType<MaintenanceTypeInput>
+    export type CreateMaintenanceTypeMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Create a new maintenance type
+ */
+export const useCreateMaintenanceType = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createMaintenanceType>>, TError,{data: BodyType<MaintenanceTypeInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createMaintenanceType>>,
+        TError,
+        {data: BodyType<MaintenanceTypeInput>},
+        TContext
+      > => {
+      return useMutation(getCreateMaintenanceTypeMutationOptions(options));
+    }
+
+export const getDeleteMaintenanceTypeUrl = (id: number,) => {
+
+
+
+
+  return `/api/maintenance-types/${id}`
+}
+
+/**
+ * @summary Delete a maintenance type
+ */
+export const deleteMaintenanceType = async (id: number, options?: RequestInit): Promise<SuccessResponse> => {
+
+  return customFetch<SuccessResponse>(getDeleteMaintenanceTypeUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getDeleteMaintenanceTypeMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteMaintenanceType>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteMaintenanceType>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['deleteMaintenanceType'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteMaintenanceType>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteMaintenanceType(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteMaintenanceTypeMutationResult = NonNullable<Awaited<ReturnType<typeof deleteMaintenanceType>>>
+
+    export type DeleteMaintenanceTypeMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Delete a maintenance type
+ */
+export const useDeleteMaintenanceType = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteMaintenanceType>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteMaintenanceType>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getDeleteMaintenanceTypeMutationOptions(options));
     }
 
 export const getUpdateMaintenanceUrl = (id: number,) => {

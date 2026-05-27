@@ -202,26 +202,46 @@ export interface SaleUpdate {
   notes?: string;
 }
 
+export interface MaintenanceType {
+  id: number;
+  name: string;
+  createdAt: string;
+}
+
+export interface MaintenanceTypeInput {
+  name: string;
+}
+
 export interface MaintenanceRecord {
   id: number;
   bikeId: number;
   bikeName: string;
+  /** @nullable */
+  typeId?: number | null;
+  /** @nullable */
+  typeName?: string | null;
   date: string;
   cost: number;
   description: string;
+  /** @nullable */
+  notes?: string | null;
+  /** @nullable */
+  prevCost?: number | null;
   createdAt: string;
 }
 
 export interface MaintenanceInput {
   bikeId: number;
+  typeId?: number;
   date: string;
   cost: number;
-  description: string;
+  notes?: string;
 }
 
 export interface MaintenanceUpdate {
   cost?: number;
-  description?: string;
+  typeId?: number;
+  notes?: string;
   date?: string;
 }
 

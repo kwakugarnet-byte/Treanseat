@@ -6,9 +6,6 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface MaintenanceUpdate {
-  cost?: number;
-  typeId?: number;
-  notes?: string;
-  date?: string;
+export interface MaintenanceTypeInput {
+  name: string;
 }
