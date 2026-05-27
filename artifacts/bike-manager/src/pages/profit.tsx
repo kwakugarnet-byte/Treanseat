@@ -48,7 +48,11 @@ export function Profit() {
     );
   }
 
-  if (!profitSummary) return null;
+  if (!profitSummary) return (
+    <div className="flex h-[400px] items-center justify-center text-muted-foreground text-sm">
+      No profit data available. Record some sales to get started.
+    </div>
+  );
 
   // --- Per-bike aggregation ---
   const bikeIdList = bikes?.map(b => b.id) ?? [];

@@ -1,33 +1,31 @@
 import { Router } from "express";
-import { db, usersTable } from "@workspace/db";
+import { db, usersTable, sessionsTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import crypto from "crypto";
 
 const router = Router();
 
-const sessions = new Map<string, number>();
-
 function hashPin(pin: string): string {
   return crypto.createHash("sha256").update(pin).digest("hex");
 }
 
-function requireAuth(req: any, res: any, next: any) {
+async function requireAuth(req: any, res: any, next: any) {
   const auth = req.headers.authorization;
   if (!auth || !auth.startsWith("Bearer ")) {
     return res.status(401).json({ error: "Unauthorized" });
   }
   const token = auth.slice(7);
-  const userId = sessions.get(token);
-  if (!userId) {
+  const [session] = await db.select().from(sessionsTable).where(eq(sessionsTable.token, token));
+  if (!session) {
     return res.status(401).json({ error: "Invalid or expired token" });
   }
-  req.userId = userId;
+  req.userId = session.userId;
   req.token = token;
   next();
 }
 
-function requireAdmin(req: any, res: any, next: any) {
-  requireAuth(req, res, async () => {
+async function requireAdmin(req: any, res: any, next: any) {
+  await requireAuth(req, res, async () => {
     const user = await db.select().from(usersTable).where(eq(usersTable.id, req.userId)).limit(1);
     if (!user[0] || user[0].role !== "admin") {
       return res.status(403).json({ error: "Admin access required" });
@@ -37,7 +35,7 @@ function requireAdmin(req: any, res: any, next: any) {
   });
 }
 
-export { requireAuth, requireAdmin, sessions, hashPin };
+export { requireAuth, requireAdmin, hashPin };
 
 router.get("/auth/staff", async (_req, res) => {
   try {
@@ -64,7 +62,7 @@ router.post("/auth/login", async (req, res) => {
 
     const user = users[0];
     const token = crypto.randomBytes(32).toString("hex");
-    sessions.set(token, user.id);
+    await db.insert(sessionsTable).values({ token, userId: user.id });
 
     return res.json({
       user: {
@@ -80,8 +78,8 @@ router.post("/auth/login", async (req, res) => {
   }
 });
 
-router.post("/auth/logout", requireAuth, (req: any, res) => {
-  sessions.delete(req.token);
+router.post("/auth/logout", requireAuth, async (req: any, res) => {
+  await db.delete(sessionsTable).where(eq(sessionsTable.token, req.token));
   return res.json({ success: true });
 });
 
