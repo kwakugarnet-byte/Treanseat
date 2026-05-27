@@ -123,7 +123,7 @@ export function Maintenance() {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label>Cost (£)</Label>
+                  <Label>Cost (₵)</Label>
                   <Input name="cost" type="number" step="0.01" required placeholder="0.00" />
                 </div>
 
@@ -168,7 +168,7 @@ export function Maintenance() {
                     <TableCell className="whitespace-nowrap">{new Date(record.date).toLocaleDateString()}</TableCell>
                     <TableCell className="font-medium">{record.bikeName}</TableCell>
                     <TableCell className="max-w-[300px] truncate">{record.description}</TableCell>
-                    <TableCell className="font-bold text-destructive">£{record.cost.toFixed(2)}</TableCell>
+                    <TableCell className="font-bold text-destructive">₵{record.cost.toFixed(2)}</TableCell>
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -208,7 +208,7 @@ export function Maintenance() {
                   <Input name="date" type="date" required defaultValue={editingRecord.date} />
                 </div>
                 <div className="space-y-2">
-                  <Label>Cost (£)</Label>
+                  <Label>Cost (₵)</Label>
                   <Input name="cost" type="number" step="0.01" defaultValue={editingRecord.cost} required />
                 </div>
               </div>

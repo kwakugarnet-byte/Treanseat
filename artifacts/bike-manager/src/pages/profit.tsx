@@ -28,7 +28,7 @@ export function Profit() {
             <CardTitle className="text-sm font-medium">Total Sales</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">£{profitSummary.totalSales.toFixed(2)}</div>
+            <div className="text-3xl font-bold">₵{profitSummary.totalSales.toFixed(2)}</div>
           </CardContent>
         </Card>
         
@@ -37,7 +37,7 @@ export function Profit() {
             <CardTitle className="text-sm font-medium">Total Maintenance</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-destructive">£{profitSummary.totalMaintenance.toFixed(2)}</div>
+            <div className="text-3xl font-bold text-destructive">₵{profitSummary.totalMaintenance.toFixed(2)}</div>
           </CardContent>
         </Card>
 
@@ -46,7 +46,7 @@ export function Profit() {
             <CardTitle className="text-sm font-bold text-primary">Net Profit</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-4xl font-black text-primary">£{profitSummary.profit.toFixed(2)}</div>
+            <div className="text-4xl font-black text-primary">₵{profitSummary.profit.toFixed(2)}</div>
           </CardContent>
         </Card>
       </div>
@@ -64,9 +64,9 @@ export function Profit() {
               >
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
                 <XAxis dataKey="weekStart" tick={{ fill: 'hsl(var(--muted-foreground))' }} />
-                <YAxis tick={{ fill: 'hsl(var(--muted-foreground))' }} tickFormatter={(val) => `£${val}`} />
+                <YAxis tick={{ fill: 'hsl(var(--muted-foreground))' }} tickFormatter={(val) => `₵${val}`} />
                 <Tooltip 
-                  formatter={(value: number) => `£${value.toFixed(2)}`}
+                  formatter={(value: number) => `₵${value.toFixed(2)}`}
                   contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))' }}
                 />
                 <Legend />

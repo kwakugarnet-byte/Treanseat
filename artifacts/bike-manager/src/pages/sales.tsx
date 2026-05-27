@@ -134,7 +134,7 @@ export function Sales() {
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>Amount (£)</Label>
+                    <Label>Amount (₵)</Label>
                     <Input name="amount" type="number" step="0.01" required placeholder="0.00" />
                   </div>
                   <div className="space-y-2">
@@ -192,7 +192,7 @@ export function Sales() {
                   <TableRow key={sale.id}>
                     <TableCell className="font-medium whitespace-nowrap">{sale.weekStart}</TableCell>
                     <TableCell>{sale.bikeName}</TableCell>
-                    <TableCell className="font-bold">£{sale.amount.toFixed(2)}</TableCell>
+                    <TableCell className="font-bold">₵{sale.amount.toFixed(2)}</TableCell>
                     <TableCell>
                       <Badge variant={
                         sale.status === 'normal' ? 'default' :
@@ -239,7 +239,7 @@ export function Sales() {
             <form onSubmit={handleUpdate} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Amount (£)</Label>
+                  <Label>Amount (₵)</Label>
                   <Input name="amount" type="number" step="0.01" defaultValue={editingSale.amount} required />
                 </div>
                 <div className="space-y-2">

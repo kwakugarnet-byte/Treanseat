@@ -76,9 +76,9 @@ export function Dashboard() {
             <Banknote className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">£{summary.totalSalesThisWeek.toFixed(2)}</div>
+            <div className="text-2xl font-bold">₵{summary.totalSalesThisWeek.toFixed(2)}</div>
             <p className="text-xs text-muted-foreground">
-              £{summary.totalSalesThisMonth.toFixed(2)} this month
+              ₵{summary.totalSalesThisMonth.toFixed(2)} this month
             </p>
           </CardContent>
         </Card>
@@ -95,15 +95,15 @@ export function Dashboard() {
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
                   <div className="text-sm text-muted-foreground">Sales</div>
-                  <div className="text-2xl font-bold text-foreground">£{profitSummary.totalSales.toFixed(2)}</div>
+                  <div className="text-2xl font-bold text-foreground">₵{profitSummary.totalSales.toFixed(2)}</div>
                 </div>
                 <div>
                   <div className="text-sm text-muted-foreground">Maintenance</div>
-                  <div className="text-2xl font-bold text-destructive">£{profitSummary.totalMaintenance.toFixed(2)}</div>
+                  <div className="text-2xl font-bold text-destructive">₵{profitSummary.totalMaintenance.toFixed(2)}</div>
                 </div>
                 <div>
                   <div className="text-sm font-semibold text-primary">Net Profit</div>
-                  <div className="text-3xl font-black text-primary">£{profitSummary.profit.toFixed(2)}</div>
+                  <div className="text-3xl font-black text-primary">₵{profitSummary.profit.toFixed(2)}</div>
                 </div>
               </div>
             </CardContent>
@@ -136,7 +136,7 @@ export function Dashboard() {
                       }>
                         {sale.status}
                       </Badge>
-                      <div className="font-bold">£{sale.amount.toFixed(2)}</div>
+                      <div className="font-bold">₵{sale.amount.toFixed(2)}</div>
                     </div>
                   </div>
                 ))}
