@@ -16,11 +16,11 @@ const NAV_ITEMS: NavItem[] = [
   { href: "/sales", label: "Sales", icon: Receipt },
   { href: "/maintenance", label: "Maintenance", icon: PenTool },
   { href: "/snooker", label: "Snooker", icon: CircleDot },
-  { href: "/pay", label: "Staff Pay", icon: Wallet },
 ];
 
 const ADMIN_NAV_ITEMS: NavItem[] = [
   { href: "/profit", label: "Profit", icon: BarChart3 },
+  { href: "/pay", label: "Staff Pay", icon: Wallet },
   { href: "/users", label: "Users", icon: Users },
 ];
 

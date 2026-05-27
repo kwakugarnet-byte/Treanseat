@@ -64,7 +64,7 @@ function Router() {
             <Route path="/profit"><ProtectedRoute component={Profit} adminOnly /></Route>
             <Route path="/users"><ProtectedRoute component={Users} adminOnly /></Route>
             <Route path="/snooker"><ProtectedRoute component={Snooker} /></Route>
-            <Route path="/pay"><ProtectedRoute component={Pay} /></Route>
+            <Route path="/pay"><ProtectedRoute component={Pay} adminOnly /></Route>
             <Route component={NotFound} />
           </Switch>
         </Layout>
