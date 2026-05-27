@@ -13,6 +13,7 @@ import { Maintenance } from "./pages/maintenance";
 import { Profit } from "./pages/profit";
 import { Users } from "./pages/users";
 import { Snooker } from "./pages/snooker";
+import { Riders } from "./pages/riders";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -56,6 +57,7 @@ function Router() {
           <Switch>
             <Route path="/dashboard"><ProtectedRoute component={Dashboard} /></Route>
             <Route path="/bikes"><ProtectedRoute component={Bikes} /></Route>
+            <Route path="/riders"><ProtectedRoute component={Riders} /></Route>
             <Route path="/sales"><ProtectedRoute component={Sales} /></Route>
             <Route path="/maintenance"><ProtectedRoute component={Maintenance} /></Route>
             <Route path="/profit"><ProtectedRoute component={Profit} adminOnly /></Route>

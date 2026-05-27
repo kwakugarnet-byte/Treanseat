@@ -515,3 +515,99 @@ export const GetBikePerformanceResponseItem = zod.object({
 export const GetBikePerformanceResponse = zod.array(GetBikePerformanceResponseItem)
 
 
+/**
+ * @summary List all riders
+ */
+export const ListRidersResponseItem = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "age": zod.number(),
+  "phone": zod.string(),
+  "emergencyContactName": zod.string(),
+  "emergencyContactPhone": zod.string(),
+  "emergencyContactAge": zod.number(),
+  "bikeId": zod.number(),
+  "bikeName": zod.string(),
+  "createdAt": zod.string()
+})
+export const ListRidersResponse = zod.array(ListRidersResponseItem)
+
+
+/**
+ * @summary Register a new rider
+ */
+export const CreateRiderBody = zod.object({
+  "name": zod.string(),
+  "age": zod.number(),
+  "phone": zod.string(),
+  "emergencyContactName": zod.string(),
+  "emergencyContactPhone": zod.string(),
+  "emergencyContactAge": zod.number(),
+  "bikeId": zod.number()
+})
+
+
+/**
+ * @summary Get a rider by ID
+ */
+export const GetRiderParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetRiderResponse = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "age": zod.number(),
+  "phone": zod.string(),
+  "emergencyContactName": zod.string(),
+  "emergencyContactPhone": zod.string(),
+  "emergencyContactAge": zod.number(),
+  "bikeId": zod.number(),
+  "bikeName": zod.string(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update a rider
+ */
+export const UpdateRiderParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const UpdateRiderBody = zod.object({
+  "name": zod.string().optional(),
+  "age": zod.number().optional(),
+  "phone": zod.string().optional(),
+  "emergencyContactName": zod.string().optional(),
+  "emergencyContactPhone": zod.string().optional(),
+  "emergencyContactAge": zod.number().optional(),
+  "bikeId": zod.number().optional()
+})
+
+export const UpdateRiderResponse = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "age": zod.number(),
+  "phone": zod.string(),
+  "emergencyContactName": zod.string(),
+  "emergencyContactPhone": zod.string(),
+  "emergencyContactAge": zod.number(),
+  "bikeId": zod.number(),
+  "bikeName": zod.string(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a rider
+ */
+export const DeleteRiderParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const DeleteRiderResponse = zod.object({
+  "success": zod.boolean()
+})
+
+

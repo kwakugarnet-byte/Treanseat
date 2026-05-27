@@ -23,6 +23,8 @@ tags:
     description: Snooker board management
   - name: dashboard
     description: Dashboard summaries
+  - name: riders
+    description: Rider management
 paths:
   /healthz:
     get:
@@ -624,8 +626,179 @@ paths:
                 items:
                   $ref: "#/components/schemas/BikePerformance"
 
+  /riders:
+    get:
+      operationId: listRiders
+      tags: [riders]
+      summary: List all riders
+      responses:
+        "200":
+          description: List of riders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Rider"
+    post:
+      operationId: createRider
+      tags: [riders]
+      summary: Register a new rider
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RiderInput"
+      responses:
+        "201":
+          description: Created rider
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Rider"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /riders/{id}:
+    get:
+      operationId: getRider
+      tags: [riders]
+      summary: Get a rider by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Rider
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Rider"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      operationId: updateRider
+      tags: [riders]
+      summary: Update a rider
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RiderUpdate"
+      responses:
+        "200":
+          description: Updated rider
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Rider"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: deleteRider
+      tags: [riders]
+      summary: Delete a rider
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
 components:
   schemas:
+    Rider:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        age:
+          type: integer
+        phone:
+          type: string
+        emergencyContactName:
+          type: string
+        emergencyContactPhone:
+          type: string
+        emergencyContactAge:
+          type: integer
+        bikeId:
+          type: integer
+        bikeName:
+          type: string
+        createdAt:
+          type: string
+      required: [id, name, age, phone, emergencyContactName, emergencyContactPhone, emergencyContactAge, bikeId, bikeName, createdAt]
+
+    RiderInput:
+      type: object
+      properties:
+        name:
+          type: string
+        age:
+          type: integer
+        phone:
+          type: string
+        emergencyContactName:
+          type: string
+        emergencyContactPhone:
+          type: string
+        emergencyContactAge:
+          type: integer
+        bikeId:
+          type: integer
+      required: [name, age, phone, emergencyContactName, emergencyContactPhone, emergencyContactAge, bikeId]
+
+    RiderUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        age:
+          type: integer
+        phone:
+          type: string
+        emergencyContactName:
+          type: string
+        emergencyContactPhone:
+          type: string
+        emergencyContactAge:
+          type: integer
+        bikeId:
+          type: integer
+
     HealthStatus:
       type: object
       properties:

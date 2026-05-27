@@ -1,6 +1,6 @@
 import { useAuth } from "@/hooks/use-auth";
 import { Link, useLocation } from "wouter";
-import { LayoutDashboard, LogOut, Users, Receipt, PenTool, BarChart3, Menu, CircleDot, Bike } from "lucide-react";
+import { LayoutDashboard, LogOut, Users, Receipt, PenTool, BarChart3, Menu, CircleDot, Bike, UserCheck } from "lucide-react";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { useLogout } from "@workspace/api-client-react";
@@ -12,6 +12,7 @@ type NavItem = { href: string; label: string; icon: React.ComponentType<{ classN
 const NAV_ITEMS: NavItem[] = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { href: "/bikes", label: "Bikes", icon: Bike },
+  { href: "/riders", label: "Riders", icon: UserCheck },
   { href: "/sales", label: "Sales", icon: Receipt },
   { href: "/maintenance", label: "Maintenance", icon: PenTool },
   { href: "/snooker", label: "Snooker", icon: CircleDot },

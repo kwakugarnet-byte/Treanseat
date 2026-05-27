@@ -5,6 +5,39 @@
  * Bike Management System API
  * OpenAPI spec version: 0.1.0
  */
+export interface Rider {
+  id: number;
+  name: string;
+  age: number;
+  phone: string;
+  emergencyContactName: string;
+  emergencyContactPhone: string;
+  emergencyContactAge: number;
+  bikeId: number;
+  bikeName: string;
+  createdAt: string;
+}
+
+export interface RiderInput {
+  name: string;
+  age: number;
+  phone: string;
+  emergencyContactName: string;
+  emergencyContactPhone: string;
+  emergencyContactAge: number;
+  bikeId: number;
+}
+
+export interface RiderUpdate {
+  name?: string;
+  age?: number;
+  phone?: string;
+  emergencyContactName?: string;
+  emergencyContactPhone?: string;
+  emergencyContactAge?: number;
+  bikeId?: number;
+}
+
 export interface HealthStatus {
   status: string;
 }

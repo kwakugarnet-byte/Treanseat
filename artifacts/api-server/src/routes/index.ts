@@ -7,6 +7,7 @@ import salesRouter from "./sales";
 import maintenanceRouter from "./maintenance";
 import dashboardRouter from "./dashboard";
 import snookerRouter from "./snooker";
+import ridersRouter from "./riders";
 
 const router: IRouter = Router();
 
@@ -18,5 +19,6 @@ router.use(salesRouter);
 router.use(maintenanceRouter);
 router.use(dashboardRouter);
 router.use(snookerRouter);
+router.use(ridersRouter);
 
 export default router;
