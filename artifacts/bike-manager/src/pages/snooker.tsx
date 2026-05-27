@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import {
   useListSnookerSessions, getListSnookerSessionsQueryKey,
@@ -45,6 +45,32 @@ function CostDiff({ cost, prevCost }: { cost: number; prevCost: number | null | 
   return <span className="flex items-center gap-1 text-xs text-green-600 font-medium"><TrendingDown className="h-3 w-3" />-₵{Math.abs(diff).toFixed(2)}</span>;
 }
 
+// ── Date Range Filter ─────────────────────────────────────────────────────────
+
+type RangePreset = "today" | "7d" | "30d" | "90d" | "year" | "custom";
+
+const PRESETS: { key: RangePreset; label: string }[] = [
+  { key: "today", label: "Today" },
+  { key: "7d", label: "7 Days" },
+  { key: "30d", label: "30 Days" },
+  { key: "90d", label: "90 Days" },
+  { key: "year", label: "Year" },
+  { key: "custom", label: "Custom" },
+];
+
+function getPresetRange(preset: RangePreset): { from: string; to: string } | null {
+  if (preset === "custom") return null;
+  const now = new Date();
+  const to = now.toISOString().slice(0, 10);
+  const from = new Date(now);
+  if (preset === "today") { /* from = today */ }
+  else if (preset === "7d") from.setDate(now.getDate() - 6);
+  else if (preset === "30d") from.setDate(now.getDate() - 29);
+  else if (preset === "90d") from.setDate(now.getDate() - 89);
+  else if (preset === "year") from.setFullYear(now.getFullYear() - 1);
+  return { from: from.toISOString().slice(0, 10), to };
+}
+
 // ── Sessions Tab ─────────────────────────────────────────────────────────────
 
 function SessionsTab() {
@@ -57,18 +83,32 @@ function SessionsTab() {
   const [cashierAmount, setCashierAmount] = useState("");
   const [notes, setNotes] = useState("");
 
+  // filter state
+  const [preset, setPreset] = useState<RangePreset>("30d");
+  const [customFrom, setCustomFrom] = useState("");
+  const [customTo, setCustomTo] = useState(new Date().toISOString().slice(0, 10));
+
   const { data: sessions, isLoading } = useListSnookerSessions({}, { query: { queryKey: getListSnookerSessionsQueryKey({}) } });
   const createSession = useCreateSnookerSession();
   const deleteSession = useDeleteSnookerSession();
 
-  const sorted = [...(sessions ?? [])].sort((a, b) => b.date.localeCompare(a.date));
-  const coinTotal = coinsCount ? parseInt(coinsCount) * 5 : 0;
-  const cashier = cashierAmount ? parseFloat(cashierAmount) : null;
-  const variance = cashier !== null ? coinTotal - cashier : null;
+  const allSorted = useMemo(() => [...(sessions ?? [])].sort((a, b) => b.date.localeCompare(a.date)), [sessions]);
 
-  const totalCoins = sorted.reduce((s, r) => s + r.coinTotal, 0);
-  const totalCashier = sorted.reduce((s, r) => s + (r.cashierAmount ?? 0), 0);
-  const totalLoss = sorted.reduce((s, r) => s + (r.variance != null && r.variance > 0 ? r.variance : 0), 0);
+  const filtered = useMemo(() => {
+    const range = preset === "custom"
+      ? (customFrom ? { from: customFrom, to: customTo || new Date().toISOString().slice(0, 10) } : null)
+      : getPresetRange(preset);
+    if (!range) return allSorted;
+    return allSorted.filter(s => s.date >= range.from && s.date <= range.to);
+  }, [allSorted, preset, customFrom, customTo]);
+
+  const coinFormTotal = coinsCount ? parseInt(coinsCount) * 5 : 0;
+  const cashierVal = cashierAmount ? parseFloat(cashierAmount) : null;
+  const variance = cashierVal !== null ? coinFormTotal - cashierVal : null;
+
+  const totalCoins = filtered.reduce((s, r) => s + r.coinTotal, 0);
+  const totalCashier = filtered.reduce((s, r) => s + (r.cashierAmount ?? 0), 0);
+  const totalLoss = filtered.reduce((s, r) => s + (r.variance != null && r.variance > 0 ? r.variance : 0), 0);
 
   const refresh = () => queryClient.invalidateQueries({ queryKey: getListSnookerSessionsQueryKey({}) });
 
@@ -91,6 +131,39 @@ function SessionsTab() {
 
   return (
     <div className="space-y-6">
+      {/* Filter bar */}
+      <div className="flex flex-wrap items-center gap-2">
+        {PRESETS.map(p => (
+          <Button
+            key={p.key}
+            size="sm"
+            variant={preset === p.key ? "default" : "outline"}
+            onClick={() => setPreset(p.key)}
+          >
+            {p.label}
+          </Button>
+        ))}
+        {preset === "custom" && (
+          <div className="flex items-center gap-2 ml-1">
+            <Input
+              type="date"
+              value={customFrom}
+              onChange={e => setCustomFrom(e.target.value)}
+              className="h-8 w-36 text-sm"
+              placeholder="From"
+            />
+            <span className="text-muted-foreground text-sm">→</span>
+            <Input
+              type="date"
+              value={customTo}
+              onChange={e => setCustomTo(e.target.value)}
+              className="h-8 w-36 text-sm"
+              placeholder="To"
+            />
+          </div>
+        )}
+      </div>
+
       {/* KPI */}
       <div className="grid grid-cols-3 gap-4">
         <Card>
@@ -122,7 +195,7 @@ function SessionsTab() {
               <div className="space-y-2">
                 <Label>Total Coins (both boards combined)</Label>
                 <Input type="number" min="0" placeholder="e.g. 48" value={coinsCount} onChange={e => setCoinsCount(e.target.value)} required />
-                {coinsCount && <p className="text-sm text-muted-foreground">₵{coinTotal.toFixed(2)} ({parseInt(coinsCount)} × ₵5.00)</p>}
+                {coinsCount && <p className="text-sm text-muted-foreground">₵{coinFormTotal.toFixed(2)} ({parseInt(coinsCount)} × ₵5.00)</p>}
               </div>
               <div className="space-y-2">
                 <Label>Cashier Amount (₵)</Label>
@@ -151,12 +224,15 @@ function SessionsTab() {
       </div>
 
       <Card>
-        <CardHeader><CardTitle className="text-base">Session History</CardTitle></CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between pb-2">
+          <CardTitle className="text-base">Session History</CardTitle>
+          <span className="text-xs text-muted-foreground">{filtered.length} record{filtered.length !== 1 ? "s" : ""}</span>
+        </CardHeader>
         <CardContent className="p-0">
           {isLoading ? (
             <div className="p-8 text-center"><RefreshCw className="h-6 w-6 animate-spin text-muted-foreground mx-auto" /></div>
-          ) : sorted.length === 0 ? (
-            <div className="p-8 text-center text-muted-foreground">No sessions yet.</div>
+          ) : filtered.length === 0 ? (
+            <div className="p-8 text-center text-muted-foreground">No sessions in this period.</div>
           ) : (
             <Table>
               <TableHeader>
@@ -171,7 +247,7 @@ function SessionsTab() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {sorted.map(s => (
+                {filtered.map(s => (
                   <TableRow key={s.id}>
                     <TableCell className="font-medium">{s.date}</TableCell>
                     <TableCell>{s.coinsCount}</TableCell>

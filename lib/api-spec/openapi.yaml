@@ -548,6 +548,25 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
+  /dashboard/combined:
+    get:
+      operationId: getCombinedProfit
+      tags: [dashboard]
+      summary: Combined bike + snooker revenue vs manager salary
+      parameters:
+        - name: month
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Combined profit summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CombinedProfit"
+
   /snooker/boards:
     get:
       operationId: listSnookerBoards
@@ -1085,9 +1104,11 @@ components:
         role:
           type: string
           enum: [admin, manager]
+        monthlySalary:
+          type: number
         createdAt:
           type: string
-      required: [id, name, role, createdAt]
+      required: [id, name, role, monthlySalary, createdAt]
 
     UserInput:
       type: object
@@ -1108,6 +1129,8 @@ components:
           type: string
         pin:
           type: string
+        monthlySalary:
+          type: number
         role:
           type: string
           enum: [admin, manager]
@@ -1554,3 +1577,31 @@ components:
         totalVariance:
           type: number
       required: [boardId, boardName, totalSessions, totalCoinRevenue, totalCashierRevenue, totalVariance]
+    CombinedProfit:
+      type: object
+      properties:
+        month:
+          type: string
+        bikeRevenue:
+          type: number
+        snookerRevenue:
+          type: number
+        totalRevenue:
+          type: number
+        managerSalaries:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+              monthlySalary:
+                type: number
+            required: [id, name, monthlySalary]
+        totalSalaries:
+          type: number
+        netProfit:
+          type: number
+      required: [month, bikeRevenue, snookerRevenue, totalRevenue, managerSalaries, totalSalaries, netProfit]

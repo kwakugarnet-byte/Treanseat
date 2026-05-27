@@ -10,5 +10,6 @@ import type { UserUpdateRole } from './userUpdateRole';
 export interface UserUpdate {
   name?: string;
   pin?: string;
+  monthlySalary?: number;
   role?: UserUpdateRole;
 }

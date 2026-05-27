@@ -2,7 +2,7 @@ import { Router } from "express";
 import { db, bikesTable, salesTable, maintenanceTable } from "@workspace/db";
 import { eq, sql, gte } from "drizzle-orm";
 import { requireAuth, requireAdmin } from "./auth";
-import { usersTable } from "@workspace/db";
+import { usersTable, snookerSessionsTable } from "@workspace/db";
 
 const router = Router();
 
@@ -152,6 +152,35 @@ router.get("/dashboard/bike-performance", requireAuth, async (req, res) => {
     });
 
     return res.json(performance);
+  } catch (err) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.get("/dashboard/combined", requireAuth, async (req: any, res) => {
+  try {
+    const month = String(req.query.month ?? new Date().toISOString().slice(0, 7));
+
+    const allSales = await db.select().from(salesTable);
+    const allSessions = await db.select().from(snookerSessionsTable);
+    const managers = await db.select().from(usersTable);
+
+    const bikeSales = allSales.filter(s => s.weekStart.startsWith(month));
+    const snookerSessions = allSessions.filter(s => s.date.startsWith(month));
+
+    const bikeRevenue = bikeSales.reduce((sum, s) => sum + parseFloat(s.amount), 0);
+    const snookerRevenue = snookerSessions.reduce((sum, s) => sum + s.coinTotal, 0);
+    const totalRevenue = bikeRevenue + snookerRevenue;
+
+    const managerSalaries = managers.map(u => ({
+      id: u.id,
+      name: u.name,
+      monthlySalary: parseFloat(u.monthlySalary),
+    }));
+    const totalSalaries = managerSalaries.reduce((sum, m) => sum + m.monthlySalary, 0);
+    const netProfit = totalRevenue - totalSalaries;
+
+    return res.json({ month, bikeRevenue, snookerRevenue, totalRevenue, managerSalaries, totalSalaries, netProfit });
   } catch (err) {
     return res.status(500).json({ error: "Internal server error" });
   }

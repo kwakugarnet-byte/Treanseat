@@ -5,12 +5,9 @@
  * Bike Management System API
  * OpenAPI spec version: 0.1.0
  */
-import type { UserRole } from './userRole';
 
-export interface User {
+export type CombinedProfitManagerSalariesItem = {
   id: number;
   name: string;
-  role: UserRole;
   monthlySalary: number;
-  createdAt: string;
-}
+};

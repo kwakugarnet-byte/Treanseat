@@ -66,6 +66,7 @@ export interface User {
   id: number;
   name: string;
   role: UserRole;
+  monthlySalary: number;
   createdAt: string;
 }
 
@@ -99,6 +100,7 @@ export const UserUpdateRole = {
 export interface UserUpdate {
   name?: string;
   pin?: string;
+  monthlySalary?: number;
   role?: UserUpdateRole;
 }
 
@@ -404,6 +406,22 @@ export interface SnookerSummary {
   recentSessions: SnookerSession[];
 }
 
+export type CombinedProfitManagerSalariesItem = {
+  id: number;
+  name: string;
+  monthlySalary: number;
+};
+
+export interface CombinedProfit {
+  month: string;
+  bikeRevenue: number;
+  snookerRevenue: number;
+  totalRevenue: number;
+  managerSalaries: CombinedProfitManagerSalariesItem[];
+  totalSalaries: number;
+  netProfit: number;
+}
+
 export type ListSalesParams = {
 bikeId?: number;
 weekStart?: string;
@@ -417,6 +435,10 @@ export type GetProfitSummaryParams = {
 weeks?: number;
 startDate?: string;
 endDate?: string;
+};
+
+export type GetCombinedProfitParams = {
+month?: string;
 };
 
 export type ListSnookerSessionsParams = {

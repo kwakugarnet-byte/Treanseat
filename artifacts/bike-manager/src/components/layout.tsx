@@ -1,6 +1,6 @@
 import { useAuth } from "@/hooks/use-auth";
 import { Link, useLocation } from "wouter";
-import { LayoutDashboard, LogOut, Users, Receipt, PenTool, BarChart3, Menu, CircleDot, Bike, UserCheck } from "lucide-react";
+import { LayoutDashboard, LogOut, Users, Receipt, PenTool, BarChart3, Menu, CircleDot, Bike, UserCheck, Wallet } from "lucide-react";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { useLogout } from "@workspace/api-client-react";
@@ -16,6 +16,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: "/sales", label: "Sales", icon: Receipt },
   { href: "/maintenance", label: "Maintenance", icon: PenTool },
   { href: "/snooker", label: "Snooker", icon: CircleDot },
+  { href: "/pay", label: "Staff Pay", icon: Wallet },
 ];
 
 const ADMIN_NAV_ITEMS: NavItem[] = [

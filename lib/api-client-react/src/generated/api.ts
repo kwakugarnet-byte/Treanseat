@@ -25,8 +25,10 @@ import type {
   BikeInput,
   BikePerformance,
   BikeUpdate,
+  CombinedProfit,
   DashboardSummary,
   ErrorResponse,
+  GetCombinedProfitParams,
   GetProfitSummaryParams,
   GetSnookerSalaryParams,
   HealthStatus,
@@ -2065,6 +2067,90 @@ export function useGetProfitSummary<TData = Awaited<ReturnType<typeof getProfitS
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetProfitSummaryQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetCombinedProfitUrl = (params?: GetCombinedProfitParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/dashboard/combined?${stringifiedParams}` : `/api/dashboard/combined`
+}
+
+/**
+ * @summary Combined bike + snooker revenue vs manager salary
+ */
+export const getCombinedProfit = async (params?: GetCombinedProfitParams, options?: RequestInit): Promise<CombinedProfit> => {
+
+  return customFetch<CombinedProfit>(getGetCombinedProfitUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetCombinedProfitQueryKey = (params?: GetCombinedProfitParams,) => {
+    return [
+    `/api/dashboard/combined`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetCombinedProfitQueryOptions = <TData = Awaited<ReturnType<typeof getCombinedProfit>>, TError = ErrorType<unknown>>(params?: GetCombinedProfitParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getCombinedProfit>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetCombinedProfitQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCombinedProfit>>> = ({ signal }) => getCombinedProfit(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCombinedProfit>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetCombinedProfitQueryResult = NonNullable<Awaited<ReturnType<typeof getCombinedProfit>>>
+export type GetCombinedProfitQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Combined bike + snooker revenue vs manager salary
+ */
+
+export function useGetCombinedProfit<TData = Awaited<ReturnType<typeof getCombinedProfit>>, TError = ErrorType<unknown>>(
+ params?: GetCombinedProfitParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getCombinedProfit>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetCombinedProfitQueryOptions(params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

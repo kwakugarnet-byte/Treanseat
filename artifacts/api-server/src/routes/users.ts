@@ -12,6 +12,7 @@ router.get("/users", requireAdmin, async (req, res) => {
       id: u.id,
       name: u.name,
       role: u.role,
+      monthlySalary: parseFloat(u.monthlySalary),
       createdAt: u.createdAt.toISOString(),
     })));
   } catch (err) {
@@ -50,6 +51,7 @@ router.get("/users/:id", requireAdmin, async (req, res) => {
       id: user.id,
       name: user.name,
       role: user.role,
+      monthlySalary: parseFloat(user.monthlySalary),
       createdAt: user.createdAt.toISOString(),
     });
   } catch (err) {
@@ -60,10 +62,11 @@ router.get("/users/:id", requireAdmin, async (req, res) => {
 router.patch("/users/:id", requireAdmin, async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const { name, pin, role } = req.body;
+    const { name, pin, role, monthlySalary } = req.body;
     const updates: any = {};
     if (name) updates.name = name;
     if (pin) updates.pin = hashPin(String(pin));
+    if (monthlySalary !== undefined) updates.monthlySalary = String(monthlySalary);
     if (role) {
       if (!["admin", "manager"].includes(role)) {
         return res.status(400).json({ error: "role must be admin or manager" });
@@ -76,6 +79,7 @@ router.patch("/users/:id", requireAdmin, async (req, res) => {
       id: user.id,
       name: user.name,
       role: user.role,
+      monthlySalary: parseFloat(user.monthlySalary),
       createdAt: user.createdAt.toISOString(),
     });
   } catch (err) {

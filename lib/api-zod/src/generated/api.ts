@@ -28,6 +28,7 @@ export const LoginResponse = zod.object({
   "id": zod.number(),
   "name": zod.string(),
   "role": zod.enum(['admin', 'manager']),
+  "monthlySalary": zod.number(),
   "createdAt": zod.string()
 }),
   "token": zod.string()
@@ -49,6 +50,7 @@ export const GetMeResponse = zod.object({
   "id": zod.number(),
   "name": zod.string(),
   "role": zod.enum(['admin', 'manager']),
+  "monthlySalary": zod.number(),
   "createdAt": zod.string()
 })
 
@@ -60,6 +62,7 @@ export const ListUsersResponseItem = zod.object({
   "id": zod.number(),
   "name": zod.string(),
   "role": zod.enum(['admin', 'manager']),
+  "monthlySalary": zod.number(),
   "createdAt": zod.string()
 })
 export const ListUsersResponse = zod.array(ListUsersResponseItem)
@@ -86,6 +89,7 @@ export const GetUserResponse = zod.object({
   "id": zod.number(),
   "name": zod.string(),
   "role": zod.enum(['admin', 'manager']),
+  "monthlySalary": zod.number(),
   "createdAt": zod.string()
 })
 
@@ -100,6 +104,7 @@ export const UpdateUserParams = zod.object({
 export const UpdateUserBody = zod.object({
   "name": zod.string().optional(),
   "pin": zod.string().optional(),
+  "monthlySalary": zod.number().optional(),
   "role": zod.enum(['admin', 'manager']).optional()
 })
 
@@ -107,6 +112,7 @@ export const UpdateUserResponse = zod.object({
   "id": zod.number(),
   "name": zod.string(),
   "role": zod.enum(['admin', 'manager']),
+  "monthlySalary": zod.number(),
   "createdAt": zod.string()
 })
 
@@ -415,6 +421,28 @@ export const GetProfitSummaryResponse = zod.object({
   "totalCost": zod.number(),
   "recordCount": zod.number()
 }))
+})
+
+
+/**
+ * @summary Combined bike + snooker revenue vs manager salary
+ */
+export const GetCombinedProfitQueryParams = zod.object({
+  "month": zod.coerce.string().optional()
+})
+
+export const GetCombinedProfitResponse = zod.object({
+  "month": zod.string(),
+  "bikeRevenue": zod.number(),
+  "snookerRevenue": zod.number(),
+  "totalRevenue": zod.number(),
+  "managerSalaries": zod.array(zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "monthlySalary": zod.number()
+})),
+  "totalSalaries": zod.number(),
+  "netProfit": zod.number()
 })
 
 
