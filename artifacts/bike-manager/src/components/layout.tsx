@@ -73,8 +73,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <aside className="hidden md:flex w-64 flex-col border-r bg-sidebar h-screen sticky top-0">
         <div className="p-6 border-b border-sidebar-border h-[72px] flex items-center">
           <div className="flex items-center gap-2">
-            <img src="/logo.jpg" alt="Trendy" className="h-8 w-8 object-contain rounded" />
-            <span className="font-bold text-lg tracking-tight uppercase text-sidebar-foreground">Trendy</span>
+            <img src="/logo.jpg" alt="Transeat" className="h-8 w-8 object-contain rounded" />
+            <span className="font-bold text-lg tracking-tight uppercase text-sidebar-foreground">Transeat</span>
           </div>
         </div>
         
@@ -107,8 +107,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <SheetContent side="left" className="w-[280px] p-0 flex flex-col bg-sidebar border-r-0">
                 <div className="p-6 border-b h-[72px] flex items-center">
                   <div className="flex items-center gap-2">
-                    <img src="/logo.jpg" alt="Trendy" className="h-8 w-8 object-contain rounded" />
-                    <span className="font-bold text-lg tracking-tight uppercase text-sidebar-foreground">Trendy</span>
+                    <img src="/logo.jpg" alt="Transeat" className="h-8 w-8 object-contain rounded" />
+                    <span className="font-bold text-lg tracking-tight uppercase text-sidebar-foreground">Transeat</span>
                   </div>
                 </div>
                 <div className="p-4 flex-1">
@@ -117,8 +117,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
               </SheetContent>
             </Sheet>
             <div className="flex items-center gap-2">
-              <img src="/logo.jpg" alt="Trendy" className="h-7 w-7 object-contain rounded" />
-              <span className="font-bold tracking-tight uppercase">Trendy</span>
+              <img src="/logo.jpg" alt="Transeat" className="h-7 w-7 object-contain rounded" />
+              <span className="font-bold tracking-tight uppercase">Transeat</span>
             </div>
           </div>
           <div className="hidden md:block">
