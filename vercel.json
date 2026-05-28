@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://transeat-api.onrender.com/api/:path*"
+      "destination": "https://treanseat-api.onrender.com/api/:path*"
     },
     {
       "source": "/((?!api/).*)",
