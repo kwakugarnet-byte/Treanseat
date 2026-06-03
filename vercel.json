@@ -1,6 +1,6 @@
 {
   "buildCommand": "cd artifacts/bike-manager && pnpm install && pnpm run build",
-  "outputDirectory": "artifacts/bike-manager/dist/public",
+  "outputDirectory": "dist/public",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
