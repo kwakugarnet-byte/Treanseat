@@ -42,6 +42,7 @@ router.get("/auth/staff", async (_req, res) => {
     const users = await db.select({ id: usersTable.id, name: usersTable.name, role: usersTable.role }).from(usersTable).orderBy(usersTable.name);
     return res.json(users);
   } catch (err) {
+    console.error("AUTH STAFF ERROR:", err);
     return res.status(500).json({ error: "Internal server error" });
   }
 });
