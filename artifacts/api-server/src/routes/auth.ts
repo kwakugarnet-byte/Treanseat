@@ -77,6 +77,7 @@ router.post("/auth/login", async (req, res) => {
       token,
     });
   } catch (err) {
+    console.error("AUTH LOGIN ERROR:", err);
     return res.status(500).json({ error: "Internal server error" });
   }
 });
