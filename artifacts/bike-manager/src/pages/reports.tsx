@@ -141,9 +141,9 @@ function useProfitReport(startDate: string, endDate: string) {
     if (!profit?.weeklyBreakdown) return [];
     return profit.weeklyBreakdown.map((w: any) => ({
       "Week": w.weekStart,
-      "Total Sales (₵)": w.totalSales ?? 0,
-      "Total Maintenance (₵)": w.totalMaintenance ?? 0,
-      "Net Profit (₵)": (w.totalSales ?? 0) - (w.totalMaintenance ?? 0),
+      "Total Sales (₵)": w.sales ?? 0,
+      "Total Maintenance (₵)": w.maintenance ?? 0,
+      "Net Profit (₵)": (w.sales ?? 0) - (w.maintenance ?? 0),
     }));
   }, [profit]);
 
