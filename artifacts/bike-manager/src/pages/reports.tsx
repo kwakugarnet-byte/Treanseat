@@ -7,6 +7,9 @@ import {
   useListRiders, getListRidersQueryKey,
   useGetProfitSummary, getGetProfitSummaryQueryKey,
   useListMaintenanceTypes, getListMaintenanceTypesQueryKey,
+  useListSnookerSessions, getListSnookerSessionsQueryKey,
+  useListSnookerMaintenance, getListSnookerMaintenanceQueryKey,
+  useListSnookerBoards, getListSnookerBoardsQueryKey,
 } from "@workspace/api-client-react";
 import * as XLSX from "xlsx";
 import { Button } from "@/components/ui/button";
@@ -16,15 +19,16 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Download, FileSpreadsheet, RefreshCw } from "lucide-react";
+import { Download, FileSpreadsheet, RefreshCw, FolderDown } from "lucide-react";
 
-type ReportType = "sales" | "maintenance" | "fleet" | "profit";
+type ReportType = "sales" | "maintenance" | "fleet" | "profit" | "snooker";
 
 const REPORT_OPTIONS: { value: ReportType; label: string; description: string; adminOnly?: boolean }[] = [
   { value: "sales", label: "Sales Report", description: "Weekly sales amounts per bike with status and notes" },
   { value: "maintenance", label: "Maintenance Report", description: "Maintenance costs by bike and type" },
   { value: "fleet", label: "Fleet Report", description: "All bikes with current rider assignments" },
   { value: "profit", label: "Profit Report", description: "Revenue vs costs breakdown by bike (admin only)", adminOnly: true },
+  { value: "snooker", label: "Snooker Report", description: "Snooker sessions, variance, and maintenance costs by board" },
 ];
 
 function todayStr() {
@@ -157,6 +161,70 @@ function useProfitReport(startDate: string, endDate: string) {
   return { rows, bikeRows, profit, isLoading };
 }
 
+// ── Snooker Report ────────────────────────────────────────────────────────────
+function useSnookerReport(startDate: string, endDate: string) {
+  const { data: sessions, isLoading: loadingSessions } = useListSnookerSessions(
+    {},
+    { query: { queryKey: getListSnookerSessionsQueryKey({}) } }
+  );
+  const { data: maintenance, isLoading: loadingMaint } = useListSnookerMaintenance(
+    { query: { queryKey: getListSnookerMaintenanceQueryKey() } }
+  );
+  const { data: boards } = useListSnookerBoards({ query: { queryKey: getListSnookerBoardsQueryKey() } });
+
+  const sessionRows = useMemo(() => {
+    if (!sessions) return [];
+    return sessions
+      .filter(s => (!startDate || s.date >= startDate) && (!endDate || s.date <= endDate))
+      .map(s => ({
+        "Date": s.date,
+        "Board": s.boardName,
+        "Coins Count": s.coinsCount,
+        "Coin Total (₵)": s.coinTotal,
+        "Cashier Amount (₵)": s.cashierAmount ?? "—",
+        "Variance (₵)": s.variance ?? "—",
+        "Recorded By": s.recordedBy ?? "—",
+        "Notes": s.notes ?? "",
+      }))
+      .sort((a, b) => b.Date.localeCompare(a.Date));
+  }, [sessions, startDate, endDate]);
+
+  const maintenanceRows = useMemo(() => {
+    if (!maintenance) return [];
+    return maintenance
+      .filter(r => (!startDate || r.date >= startDate) && (!endDate || r.date <= endDate))
+      .map(r => ({
+        "Date": r.date,
+        "Type": r.typeName ?? "—",
+        "Cost (₵)": r.cost,
+        "Notes": r.notes ?? "",
+      }))
+      .sort((a, b) => b.Date.localeCompare(a.Date));
+  }, [maintenance, startDate, endDate]);
+
+  const summary = useMemo(() => {
+    const totalRevenue = sessionRows.reduce((sum, r) => sum + (typeof r["Coin Total (₵)"] === "number" ? r["Coin Total (₵)"] : 0), 0);
+    const totalMaint = maintenanceRows.reduce((sum, r) => sum + r["Cost (₵)"], 0);
+    const byBoard: Record<string, { sessions: number; revenue: number }> = {};
+    sessionRows.forEach(r => {
+      if (!byBoard[r.Board]) byBoard[r.Board] = { sessions: 0, revenue: 0 };
+      byBoard[r.Board].sessions += 1;
+      byBoard[r.Board].revenue += typeof r["Coin Total (₵)"] === "number" ? r["Coin Total (₵)"] : 0;
+    });
+    return { totalRevenue, totalMaint, byBoard };
+  }, [sessionRows, maintenanceRows]);
+
+  const boardSummaryRows = useMemo(() =>
+    Object.entries(summary.byBoard).map(([board, s]) => ({
+      "Board": board,
+      "Sessions": s.sessions,
+      "Total Revenue (₵)": s.revenue,
+    })),
+  [summary]);
+
+  return { sessionRows, maintenanceRows, boardSummaryRows, summary, isLoading: loadingSessions || loadingMaint };
+}
+
 // ── Export helper ─────────────────────────────────────────────────────────────
 function exportToExcel(sheets: { name: string; data: Record<string, any>[] }[], filename: string) {
   const wb = XLSX.utils.book_new();
@@ -184,17 +252,20 @@ export function Reports() {
   const maintenanceReport = useMaintenanceReport(startDate, endDate);
   const fleetReport = useFleetReport();
   const profitReport = useProfitReport(startDate, endDate);
+  const snookerReport = useSnookerReport(startDate, endDate);
 
   const isLoading =
     reportType === "sales" ? salesReport.isLoading
     : reportType === "maintenance" ? maintenanceReport.isLoading
     : reportType === "fleet" ? fleetReport.isLoading
+    : reportType === "snooker" ? snookerReport.isLoading
     : profitReport.isLoading;
 
   const currentRows =
     reportType === "sales" ? salesReport.rows
     : reportType === "maintenance" ? maintenanceReport.rows
     : reportType === "fleet" ? fleetReport.rows
+    : reportType === "snooker" ? snookerReport.sessionRows
     : profitReport.rows;
 
   function handleExport() {
@@ -235,11 +306,56 @@ export function Reports() {
         ],
         `profit-report-${date}.xlsx`
       );
+    } else if (reportType === "snooker") {
+      exportToExcel(
+        [
+          { name: "Snooker Sessions", data: snookerReport.sessionRows },
+          { name: "Snooker Maintenance", data: snookerReport.maintenanceRows },
+          { name: "By Board", data: snookerReport.boardSummaryRows },
+        ],
+        `snooker-report-${date}.xlsx`
+      );
     }
   }
 
+  function handleExportAll() {
+    const date = new Date().toISOString().slice(0, 10);
+    const sheets: { name: string; data: Record<string, any>[] }[] = [
+      { name: "Sales Records", data: salesReport.rows },
+      {
+        name: "Sales by Bike",
+        data: Object.entries(salesReport.summary.byBike).map(([bike, total]) => ({
+          "Bike": bike, "Total Sales (₵)": total,
+        })),
+      },
+      { name: "Maintenance Records", data: maintenanceReport.rows },
+      {
+        name: "Maintenance by Bike",
+        data: Object.entries(maintenanceReport.summary.byBike).map(([bike, total]) => ({
+          "Bike": bike, "Total Cost (₵)": total,
+        })),
+      },
+      { name: "Fleet", data: fleetReport.rows },
+      { name: "Snooker Sessions", data: snookerReport.sessionRows },
+      { name: "Snooker Maintenance", data: snookerReport.maintenanceRows },
+      { name: "Snooker by Board", data: snookerReport.boardSummaryRows },
+      ...(isAdmin && profitReport.rows.length > 0
+        ? [
+            { name: "Profit Weekly", data: profitReport.rows },
+            { name: "Profit by Bike", data: profitReport.bikeRows },
+          ]
+        : []),
+    ];
+    exportToExcel(sheets, `all-reports-${date}.xlsx`);
+  }
+
+  const allLoading =
+    salesReport.isLoading || maintenanceReport.isLoading || fleetReport.isLoading ||
+    profitReport.isLoading || snookerReport.isLoading;
+
   const selectedOption = REPORT_OPTIONS.find(o => o.value === reportType)!;
   const showDateFilter = reportType !== "fleet";
+  const isSnooker = reportType === "snooker";
 
   return (
     <div className="space-y-6">
@@ -248,10 +364,16 @@ export function Reports() {
           <h1 className="text-2xl font-bold">Reports</h1>
           <p className="text-muted-foreground text-sm mt-1">Generate and export data to Excel</p>
         </div>
-        <Button onClick={handleExport} disabled={isLoading || currentRows.length === 0}>
-          <Download className="h-4 w-4 mr-2" />
-          Export Excel
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={handleExport} disabled={isLoading || currentRows.length === 0}>
+            <Download className="h-4 w-4 mr-2" />
+            Export This
+          </Button>
+          <Button onClick={handleExportAll} disabled={allLoading}>
+            <FolderDown className="h-4 w-4 mr-2" />
+            Export All Reports
+          </Button>
+        </div>
       </div>
 
       {/* Controls */}
@@ -379,6 +501,35 @@ export function Reports() {
               <CardTitle className={`text-2xl ${profitReport.profit.profit >= 0 ? "text-green-600" : "text-red-600"}`}>
                 {fmt(profitReport.profit.profit)}
               </CardTitle>
+            </CardHeader>
+          </Card>
+        </div>
+      )}
+
+      {reportType === "snooker" && !snookerReport.isLoading && snookerReport.sessionRows.length > 0 && (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <Card>
+            <CardHeader className="pb-1 pt-4 px-4">
+              <CardDescription>Sessions</CardDescription>
+              <CardTitle className="text-2xl">{snookerReport.sessionRows.length}</CardTitle>
+            </CardHeader>
+          </Card>
+          <Card>
+            <CardHeader className="pb-1 pt-4 px-4">
+              <CardDescription>Total Revenue</CardDescription>
+              <CardTitle className="text-2xl">{fmt(snookerReport.summary.totalRevenue)}</CardTitle>
+            </CardHeader>
+          </Card>
+          <Card>
+            <CardHeader className="pb-1 pt-4 px-4">
+              <CardDescription>Maintenance Cost</CardDescription>
+              <CardTitle className="text-2xl">{fmt(snookerReport.summary.totalMaint)}</CardTitle>
+            </CardHeader>
+          </Card>
+          <Card>
+            <CardHeader className="pb-1 pt-4 px-4">
+              <CardDescription>Boards Active</CardDescription>
+              <CardTitle className="text-2xl">{Object.keys(snookerReport.summary.byBoard).length}</CardTitle>
             </CardHeader>
           </Card>
         </div>
