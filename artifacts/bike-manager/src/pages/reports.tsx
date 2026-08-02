@@ -6,6 +6,7 @@ import {
   useListBikes, getListBikesQueryKey,
   useListRiders, getListRidersQueryKey,
   useGetProfitSummary, getGetProfitSummaryQueryKey,
+  useGetBikePerformance, getGetBikePerformanceQueryKey,
   useListMaintenanceTypes, getListMaintenanceTypesQueryKey,
   useListSnookerSessions, getListSnookerSessionsQueryKey,
   useListSnookerMaintenance, getListSnookerMaintenanceQueryKey,
@@ -136,6 +137,9 @@ function useProfitReport(startDate: string, endDate: string) {
     { startDate, endDate },
     { query: { queryKey: getGetProfitSummaryQueryKey({ startDate, endDate }) } }
   );
+  const { data: bikePerf, isLoading: loadingBikePerf } = useGetBikePerformance(
+    { query: { queryKey: getGetBikePerformanceQueryKey() } }
+  );
 
   const rows = useMemo(() => {
     if (!profit?.weeklyBreakdown) return [];
@@ -148,17 +152,18 @@ function useProfitReport(startDate: string, endDate: string) {
   }, [profit]);
 
   const bikeRows = useMemo(() => {
-    if (!profit?.maintenanceByBike) return [];
-    return profit.maintenanceByBike.map((b: any) => ({
+    if (!bikePerf) return [];
+    return bikePerf.map((b: any) => ({
       "Bike": b.bikeName,
       "Total Sales (₵)": b.totalSales ?? 0,
       "Total Maintenance (₵)": b.totalMaintenance ?? 0,
       "Net Profit (₵)": (b.totalSales ?? 0) - (b.totalMaintenance ?? 0),
       "Weeks Recorded": b.weeksRecorded ?? 0,
+      "Avg Weekly Sales (₵)": b.averageWeeklySales ?? 0,
     }));
-  }, [profit]);
+  }, [bikePerf]);
 
-  return { rows, bikeRows, profit, isLoading };
+  return { rows, bikeRows, profit, isLoading: isLoading || loadingBikePerf };
 }
 
 // ── Snooker Report ────────────────────────────────────────────────────────────
