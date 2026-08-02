@@ -38,7 +38,7 @@ function daysAgo(n: number) {
 
 function fmt(n: number | undefined | null) {
   if (n == null) return "—";
-  return `₦${Number(n).toLocaleString()}`;
+  return `₵${Number(n).toLocaleString()}`;
 }
 
 // ── Sales Report ─────────────────────────────────────────────────────────────
@@ -56,7 +56,7 @@ function useSalesReport(startDate: string, endDate: string) {
       .map(s => ({
         "Week Start": s.weekStart,
         "Bike": bikes?.find(b => b.id === s.bikeId)?.name ?? `Bike #${s.bikeId}`,
-        "Amount (₦)": s.amount,
+        "Amount (₵)": s.amount,
         "Status": s.status,
         "Notes": s.notes ?? "",
       }))
@@ -64,9 +64,9 @@ function useSalesReport(startDate: string, endDate: string) {
   }, [sales, bikes, startDate, endDate]);
 
   const summary = useMemo(() => {
-    const total = rows.reduce((sum, r) => sum + r["Amount (₦)"], 0);
+    const total = rows.reduce((sum, r) => sum + r["Amount (₵)"], 0);
     const byBike: Record<string, number> = {};
-    rows.forEach(r => { byBike[r.Bike] = (byBike[r.Bike] ?? 0) + r["Amount (₦)"]; });
+    rows.forEach(r => { byBike[r.Bike] = (byBike[r.Bike] ?? 0) + r["Amount (₵)"]; });
     return { total, byBike };
   }, [rows]);
 
@@ -90,16 +90,16 @@ function useMaintenanceReport(startDate: string, endDate: string) {
         "Date": r.date,
         "Bike": bikes?.find(b => b.id === r.bikeId)?.name ?? `Bike #${r.bikeId}`,
         "Type": types?.find(t => t.id === r.typeId)?.name ?? r.typeName ?? "—",
-        "Cost (₦)": r.cost,
+        "Cost (₵)": r.cost,
         "Notes": r.notes ?? "",
       }))
       .sort((a, b) => b.Date.localeCompare(a.Date));
   }, [records, bikes, types, startDate, endDate]);
 
   const summary = useMemo(() => {
-    const total = rows.reduce((sum, r) => sum + r["Cost (₦)"], 0);
+    const total = rows.reduce((sum, r) => sum + r["Cost (₵)"], 0);
     const byBike: Record<string, number> = {};
-    rows.forEach(r => { byBike[r.Bike] = (byBike[r.Bike] ?? 0) + r["Cost (₦)"]; });
+    rows.forEach(r => { byBike[r.Bike] = (byBike[r.Bike] ?? 0) + r["Cost (₵)"]; });
     return { total, byBike };
   }, [rows]);
 
@@ -137,9 +137,9 @@ function useProfitReport(startDate: string, endDate: string) {
     if (!profit?.weeklyBreakdown) return [];
     return profit.weeklyBreakdown.map((w: any) => ({
       "Week": w.weekStart,
-      "Total Sales (₦)": w.totalSales ?? 0,
-      "Total Maintenance (₦)": w.totalMaintenance ?? 0,
-      "Net Profit (₦)": (w.totalSales ?? 0) - (w.totalMaintenance ?? 0),
+      "Total Sales (₵)": w.totalSales ?? 0,
+      "Total Maintenance (₵)": w.totalMaintenance ?? 0,
+      "Net Profit (₵)": (w.totalSales ?? 0) - (w.totalMaintenance ?? 0),
     }));
   }, [profit]);
 
@@ -147,9 +147,9 @@ function useProfitReport(startDate: string, endDate: string) {
     if (!profit?.maintenanceByBike) return [];
     return profit.maintenanceByBike.map((b: any) => ({
       "Bike": b.bikeName,
-      "Total Sales (₦)": b.totalSales ?? 0,
-      "Total Maintenance (₦)": b.totalMaintenance ?? 0,
-      "Net Profit (₦)": (b.totalSales ?? 0) - (b.totalMaintenance ?? 0),
+      "Total Sales (₵)": b.totalSales ?? 0,
+      "Total Maintenance (₵)": b.totalMaintenance ?? 0,
+      "Net Profit (₵)": (b.totalSales ?? 0) - (b.totalMaintenance ?? 0),
       "Weeks Recorded": b.weeksRecorded ?? 0,
     }));
   }, [profit]);
@@ -206,7 +206,7 @@ export function Reports() {
           {
             name: "Summary by Bike",
             data: Object.entries(salesReport.summary.byBike).map(([bike, total]) => ({
-              "Bike": bike, "Total Sales (₦)": total,
+              "Bike": bike, "Total Sales (₵)": total,
             })),
           },
         ],
@@ -219,7 +219,7 @@ export function Reports() {
           {
             name: "Summary by Bike",
             data: Object.entries(maintenanceReport.summary.byBike).map(([bike, total]) => ({
-              "Bike": bike, "Total Cost (₦)": total,
+              "Bike": bike, "Total Cost (₵)": total,
             })),
           },
         ],
@@ -419,7 +419,7 @@ export function Reports() {
                     <TableRow key={i}>
                       {Object.values(row).map((val, j) => (
                         <TableCell key={j} className="whitespace-nowrap">
-                          {typeof val === "number" && String(Object.keys(row)[j]).includes("₦")
+                          {typeof val === "number" && String(Object.keys(row)[j]).includes("₵")
                             ? fmt(val)
                             : String(val ?? "—")}
                         </TableCell>
@@ -454,9 +454,9 @@ export function Reports() {
                     <TableRow key={i}>
                       {Object.entries(row).map(([key, val], j) => (
                         <TableCell key={j} className="whitespace-nowrap">
-                          {typeof val === "number" && key.includes("₦")
+                          {typeof val === "number" && key.includes("₵")
                             ? fmt(val)
-                            : typeof val === "number" && key === "Net Profit (₦)"
+                            : typeof val === "number" && key === "Net Profit (₵)"
                               ? <span className={val >= 0 ? "text-green-600" : "text-red-600"}>{fmt(val)}</span>
                               : String(val ?? "—")}
                         </TableCell>
