@@ -15,6 +15,7 @@ import { Users } from "./pages/users";
 import { Snooker } from "./pages/snooker";
 import { Riders } from "./pages/riders";
 import { Pay } from "./pages/pay";
+import { Reports } from "./pages/reports";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -65,6 +66,7 @@ function Router() {
             <Route path="/users"><ProtectedRoute component={Users} adminOnly /></Route>
             <Route path="/snooker"><ProtectedRoute component={Snooker} /></Route>
             <Route path="/pay"><ProtectedRoute component={Pay} adminOnly /></Route>
+            <Route path="/reports"><ProtectedRoute component={Reports} /></Route>
             <Route component={NotFound} />
           </Switch>
         </Layout>
