@@ -1,0 +1,7 @@
+{
+  "buildCommand": "pnpm --filter @workspace/staff-login run build",
+  "outputDirectory": "artifacts/staff-login/dist",
+  "env": {
+    "VITE_API_URL": "https://treanseat-api.onrender.com"
+  }
+}
