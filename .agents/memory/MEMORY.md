@@ -1,0 +1,1 @@
+- [Imported app workflow routing](imported-app-workflows.md) — preserved app copies may share ports with generated starter artifacts; run only the intended service when verifying.

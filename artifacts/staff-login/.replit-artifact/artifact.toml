@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Staff PIN Login"
+description = "A staff sign-in app for Admin, Tobi, and Puma using separate PINs, designed for a simple and secure team entry experience."
+version = "1.0.0"
+id = "artifacts/staff-login"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25461
+
+[services.development]
+run = "pnpm --filter @workspace/staff-login run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/staff-login", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/staff-login/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25461"
+BASE_PATH = "/"
