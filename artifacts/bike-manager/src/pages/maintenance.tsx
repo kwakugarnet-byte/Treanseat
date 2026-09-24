@@ -66,6 +66,57 @@ function autoDetectGap(allRecords: any[], bikeId: number, typeId: number | null)
   return Math.round(total / (relevant.length - 1));
 }
 
+function sameMaintenanceType(left: any, right: any): boolean {
+  if (
+    left.typeId != null &&
+    right.typeId != null &&
+    Number(left.typeId) === Number(right.typeId)
+  ) {
+    return true;
+  }
+
+  const leftName = typeof left.typeName === "string"
+    ? left.typeName.trim().replace(/\s+/g, " ").toLowerCase()
+    : "";
+  const rightName = typeof right.typeName === "string"
+    ? right.typeName.trim().replace(/\s+/g, " ").toLowerCase()
+    : "";
+
+  return leftName !== "" && leftName === rightName;
+}
+
+function isNewerMaintenanceRecord(candidate: any, record: any): boolean {
+  if (
+    Number(candidate.bikeId) !== Number(record.bikeId) ||
+    Number(candidate.id) === Number(record.id) ||
+    !sameMaintenanceType(candidate, record)
+  ) {
+    return false;
+  }
+
+  const candidateDate = Date.parse(candidate.date);
+  const recordDate = Date.parse(record.date);
+  if (
+    Number.isFinite(candidateDate) &&
+    Number.isFinite(recordDate) &&
+    candidateDate !== recordDate
+  ) {
+    return candidateDate > recordDate;
+  }
+
+  const candidateCreatedAt = Date.parse(candidate.createdAt);
+  const recordCreatedAt = Date.parse(record.createdAt);
+  if (
+    Number.isFinite(candidateCreatedAt) &&
+    Number.isFinite(recordCreatedAt) &&
+    candidateCreatedAt !== recordCreatedAt
+  ) {
+    return candidateCreatedAt > recordCreatedAt;
+  }
+
+  return Number(candidate.id) > Number(record.id);
+}
+
 function NextDue({ record, frequencyDays, allRecords }: {
   record: any;
   frequencyDays: number | undefined;
@@ -76,10 +127,7 @@ function NextDue({ record, frequencyDays, allRecords }: {
   // A newer entry replaces the previous maintenance cycle. Older entries
   // should remain in history but must not continue to show as overdue.
   const newerRecordExists = allRecords.some((candidate) =>
-    candidate.id !== record.id &&
-    candidate.bikeId === record.bikeId &&
-    candidate.typeId === record.typeId &&
-    (candidate.date > record.date || (candidate.date === record.date && candidate.id > record.id))
+    isNewerMaintenanceRecord(candidate, record)
   );
   if (newerRecordExists) {
     return <span className="text-xs text-muted-foreground">Completed</span>;
