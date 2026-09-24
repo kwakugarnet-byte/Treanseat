@@ -8,6 +8,7 @@ import { Loader2, ChevronLeft, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 type StaffMember = { id: number; name: string; role: string };
+const LOGO_SRC = `${import.meta.env.BASE_URL}logo.jpg`;
 
 export function Login() {
   const [staff, setStaff] = useState<StaffMember[]>([]);
@@ -56,7 +57,7 @@ export function Login() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-muted/40 p-4">
       <div className="w-full max-w-sm space-y-6">
         <div className="flex flex-col items-center gap-3">
-          <img src="/logo.jpg" alt="Transeat" className="w-20 h-20 object-contain rounded-md" />
+          <img src={LOGO_SRC} alt="Transeat" className="w-20 h-20 object-contain rounded-md" />
         </div>
 
         {selectedUser ? (

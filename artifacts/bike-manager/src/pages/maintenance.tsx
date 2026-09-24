@@ -73,6 +73,18 @@ function NextDue({ record, frequencyDays, allRecords }: {
 }) {
   if (!record) return <span className="text-muted-foreground text-xs">—</span>;
 
+  // A newer entry replaces the previous maintenance cycle. Older entries
+  // should remain in history but must not continue to show as overdue.
+  const newerRecordExists = allRecords.some((candidate) =>
+    candidate.id !== record.id &&
+    candidate.bikeId === record.bikeId &&
+    candidate.typeId === record.typeId &&
+    (candidate.date > record.date || (candidate.date === record.date && candidate.id > record.id))
+  );
+  if (newerRecordExists) {
+    return <span className="text-xs text-muted-foreground">Completed</span>;
+  }
+
   let effectiveDays = frequencyDays ?? 0;
   let isAuto = false;
 
