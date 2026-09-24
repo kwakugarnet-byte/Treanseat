@@ -220,7 +220,7 @@ importers:
         specifier: 3.1.0
         version: 3.1.0
 
-  artifacts/bike-manager:
+  artifacts/bike-manager-web:
     dependencies:
       xlsx:
         specifier: ^0.18.5
@@ -608,14 +608,14 @@ importers:
   lib/api-spec:
     devDependencies:
       orval:
-        specifier: 8.9.1
-        version: 8.9.1(prettier@3.9.6)(typescript@5.9.3)
+        specifier: ^8.9.1
+        version: 8.23.0(prettier@3.9.6)(typescript@5.9.3)
 
   lib/api-zod:
     dependencies:
       zod:
-        specifier: 'catalog:'
-        version: 3.25.76
+        specifier: ^4.4.3
+        version: 4.4.3
 
   lib/db:
     dependencies:
@@ -3176,6 +3176,9 @@ packages:
   zod@3.25.76:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
+  zod@4.4.3:
+    resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
+
 snapshots:
 
   '@babel/code-frame@7.29.7':
@@ -5699,3 +5702,5 @@ snapshots:
   yoctocolors@2.2.0: {}
 
   zod@3.25.76: {}
+
+  zod@4.4.3: {}

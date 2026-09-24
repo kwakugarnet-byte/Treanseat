@@ -1110,6 +1110,565 @@ components:
           type: string
       required: [userId, pin]
 
+
+    AuthResult:
+      type: object
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+        token:
+          type: string
+      required: [user, token]
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        role:
+          type: string
+          enum: [admin, manager]
+        monthlySalary:
+          type: number
+        createdAt:
+          type: string
+      required: [id, name, role, monthlySalary, createdAt]
+
+    UserInput:
+      type: object
+      properties:
+        name:
+          type: string
+        pin:
+          type: string
+        role:
+          type: string
+          enum: [admin, manager]
+      required: [name, pin, role]
+
+    UserUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        pin:
+          type: string
+        monthlySalary:
+          type: number
+        role:
+          type: string
+          enum: [admin, manager]
+
+    Bike:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        status:
+          type: string
+          enum: [active, inactive, maintenance]
+        createdAt:
+          type: string
+      required: [id, name, status, createdAt]
+
+    BikeInput:
+      type: object
+      properties:
+        name:
+          type: string
+        status:
+          type: string
+          enum: [active, inactive, maintenance]
+      required: [name]
+
+    BikeUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        status:
+          type: string
+          enum: [active, inactive, maintenance]
+
+    Sale:
+      type: object
+      properties:
+        id:
+          type: integer
+        bikeId:
+          type: integer
+        bikeName:
+          type: string
+        weekStart:
+          type: string
+        amount:
+          type: number
+        status:
+          type: string
+          enum: [normal, absent, illness, maintenance]
+        notes:
+          type: ["string", "null"]
+        recordedAt:
+          type: string
+      required: [id, bikeId, bikeName, weekStart, amount, status, recordedAt]
+
+    SaleInput:
+      type: object
+      properties:
+        bikeId:
+          type: integer
+        weekStart:
+          type: string
+        amount:
+          type: number
+        status:
+          type: string
+          enum: [normal, absent, illness, maintenance]
+        notes:
+          type: string
+      required: [bikeId, weekStart, amount, status]
+
+    SaleUpdate:
+      type: object
+      properties:
+        amount:
+          type: number
+        status:
+          type: string
+          enum: [normal, absent, illness, maintenance]
+        notes:
+          type: string
+
+    MaintenanceType:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        frequencyDays:
+          type: integer
+          description: How often this maintenance should repeat in days. 0 means no fixed schedule.
+        createdAt:
+          type: string
+      required: [id, name, frequencyDays, createdAt]
+
+    MaintenanceTypeInput:
+      type: object
+      properties:
+        name:
+          type: string
+        frequencyDays:
+          type: integer
+          description: How often this maintenance should repeat in days. 0 means no fixed schedule.
+      required: [name]
+
+    MaintenanceTypeUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        frequencyDays:
+          type: integer
+
+    MaintenanceRecord:
+      type: object
+      properties:
+        id:
+          type: integer
+        bikeId:
+          type: integer
+        bikeName:
+          type: string
+        typeId:
+          type: ["integer", "null"]
+        typeName:
+          type: ["string", "null"]
+        date:
+          type: string
+        cost:
+          type: number
+        description:
+          type: string
+        notes:
+          type: ["string", "null"]
+        prevCost:
+          type: ["number", "null"]
+        createdAt:
+          type: string
+      required: [id, bikeId, bikeName, date, cost, description, createdAt]
+
+    MaintenanceInput:
+      type: object
+      properties:
+        bikeId:
+          type: integer
+        typeId:
+          type: integer
+        date:
+          type: string
+        cost:
+          type: number
+        notes:
+          type: string
+      required: [bikeId, date, cost]
+
+    MaintenanceUpdate:
+      type: object
+      properties:
+        cost:
+          type: number
+        typeId:
+          type: integer
+        notes:
+          type: string
+        date:
+          type: string
+
+    DashboardSummary:
+      type: object
+      properties:
+        totalBikes:
+          type: integer
+        activeBikes:
+          type: integer
+        maintenanceBikes:
+          type: integer
+        totalSalesThisWeek:
+          type: number
+        totalSalesThisMonth:
+          type: number
+        recentSales:
+          type: array
+          items:
+            $ref: "#/components/schemas/Sale"
+      required: [totalBikes, activeBikes, maintenanceBikes, totalSalesThisWeek, totalSalesThisMonth, recentSales]
+
+    ProfitSummary:
+      type: object
+      properties:
+        totalSales:
+          type: number
+        totalMaintenance:
+          type: number
+        profit:
+          type: number
+        weeklyBreakdown:
+          type: array
+          items:
+            $ref: "#/components/schemas/WeeklyProfit"
+        maintenanceByBike:
+          type: array
+          items:
+            $ref: "#/components/schemas/MaintenanceByBike"
+      required: [totalSales, totalMaintenance, profit, weeklyBreakdown, maintenanceByBike]
+
+    MaintenanceByBike:
+      type: object
+      properties:
+        bikeId:
+          type: integer
+        bikeName:
+          type: string
+        totalCost:
+          type: number
+        recordCount:
+          type: integer
+      required: [bikeId, bikeName, totalCost, recordCount]
+
+    WeeklyProfit:
+      type: object
+      properties:
+        weekStart:
+          type: string
+        sales:
+          type: number
+        maintenance:
+          type: number
+        profit:
+          type: number
+      required: [weekStart, sales, maintenance, profit]
+
+    BikePerformance:
+      type: object
+      properties:
+        bikeId:
+          type: integer
+        bikeName:
+          type: string
+        totalSales:
+          type: number
+        totalMaintenance:
+          type: number
+        weeksRecorded:
+          type: integer
+        averageWeeklySales:
+          type: number
+      required: [bikeId, bikeName, totalSales, totalMaintenance, weeksRecorded, averageWeeklySales]
+
+    SnookerMaintenanceRecord:
+      type: object
+      properties:
+        id:
+          type: integer
+        typeId:
+          type: ["integer", "null"]
+        typeName:
+          type: ["string", "null"]
+        date:
+          type: string
+        cost:
+          type: number
+        notes:
+          type: ["string", "null"]
+        prevCost:
+          type: ["number", "null"]
+        createdAt:
+          type: string
+      required: [id, date, cost, createdAt]
+
+    SnookerMaintenanceInput:
+      type: object
+      properties:
+        typeId:
+          type: integer
+        date:
+          type: string
+        cost:
+          type: number
+        notes:
+          type: string
+      required: [date, cost]
+
+    SnookerWorker:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        phone:
+          type: string
+        monthlySalary:
+          type: number
+        isActive:
+          type: integer
+        createdAt:
+          type: string
+      required: [id, name, phone, monthlySalary, isActive, createdAt]
+
+    SnookerWorkerInput:
+      type: object
+      properties:
+        name:
+          type: string
+        phone:
+          type: string
+        monthlySalary:
+          type: number
+        isActive:
+          type: integer
+      required: [name, phone, monthlySalary]
+
+    SnookerSalarySummary:
+      type: object
+      properties:
+        workerId:
+          type: integer
+        workerName:
+          type: string
+        month:
+          type: ["string", "null"]
+        monthlySalary:
+          type: number
+        totalLoss:
+          type: number
+        netPay:
+          type: number
+        deductions:
+          type: array
+          items:
+            type: object
+            properties:
+              date:
+                type: string
+              variance:
+                type: number
+      required: [workerId, workerName, monthlySalary, totalLoss, netPay, deductions]
+
+    SnookerBoard:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        coinValue:
+          type: number
+        isActive:
+          type: integer
+        createdAt:
+          type: string
+      required: [id, name, coinValue, isActive, createdAt]
+
+    SnookerBoardInput:
+      type: object
+      properties:
+        name:
+          type: string
+        coinValue:
+          type: number
+      required: [name]
+
+    SnookerSession:
+      type: object
+      properties:
+        id:
+          type: integer
+        boardId:
+          type: integer
+        boardName:
+          type: string
+        date:
+          type: string
+        coinsCount:
+          type: integer
+        coinTotal:
+          type: number
+        cashierAmount:
+          type: ["number", "null"]
+        variance:
+          type: ["number", "null"]
+        notes:
+          type: ["string", "null"]
+        recordedBy:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+      required: [id, boardId, boardName, date, coinsCount, coinTotal, createdAt]
+
+    SnookerSessionInput:
+      type: object
+      properties:
+        boardId:
+          type: integer
+        date:
+          type: string
+        coinsCount:
+          type: integer
+        cashierAmount:
+          type: number
+        notes:
+          type: string
+        recordedBy:
+          type: string
+      required: [date, coinsCount, cashierAmount]
+
+    SnookerSessionUpdate:
+      type: object
+      properties:
+        coinsCount:
+          type: integer
+        cashierAmount:
+          type: number
+        notes:
+          type: string
+        recordedBy:
+          type: string
+
+    SnookerSummary:
+      type: object
+      properties:
+        totalSessions:
+          type: integer
+        totalCoinRevenue:
+          type: number
+        totalCashierRevenue:
+          type: number
+        totalVariance:
+          type: number
+        boardBreakdown:
+          type: array
+          items:
+            $ref: "#/components/schemas/SnookerBoardSummary"
+        recentSessions:
+          type: array
+          items:
+            $ref: "#/components/schemas/SnookerSession"
+      required: [totalSessions, totalCoinRevenue, totalCashierRevenue, totalVariance, boardBreakdown, recentSessions]
+
+    SnookerBoardSummary:
+      type: object
+      properties:
+        boardId:
+          type: integer
+        boardName:
+          type: string
+        totalSessions:
+          type: integer
+        totalCoinRevenue:
+          type: number
+        totalCashierRevenue:
+          type: number
+        totalVariance:
+          type: number
+      required: [boardId, boardName, totalSessions, totalCoinRevenue, totalCashierRevenue, totalVariance]
+    CombinedProfit:
+      type: object
+      properties:
+        month:
+          type: string
+        bikeRevenue:
+          type: number
+        snookerRevenue:
+          type: number
+        totalRevenue:
+          type: number
+        managerSalaries:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+              monthlySalary:
+                type: number
+            required: [id, name, monthlySalary]
+        totalSalaries:
+          type: number
+        netProfit:
+          type: number
+      required: [month, bikeRevenue, snookerRevenue, totalRevenue, managerSalaries, totalSalaries, netProfit]
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required: [error]
+
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+      required: [success]
+
+    LoginInput:
+      type: object
+      properties:
+        userId:
+          type: integer
+        pin:
+          type: string
+      required: [userId, pin]
+
     AuthResult:
       type: object
       properties:

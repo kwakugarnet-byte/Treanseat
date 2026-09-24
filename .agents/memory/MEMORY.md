@@ -1,0 +1,2 @@
+- [Artifact path prefixes](artifact-path-prefixes.md) — use the artifact base path for browser asset URLs and internal navigation; root-absolute paths break mounted previews.
+- [Imported backup workflows](imported-backup-workflows.md) — migrated apps may leave failed managed backup services; verify the active artifact rather than treating backup failures as the live app.
